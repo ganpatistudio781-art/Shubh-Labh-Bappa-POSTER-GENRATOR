@@ -1,360 +1,597 @@
-// ===============================
-// Shubh Labh Poster Studio
-// Part 1
-// ===============================
+// ===================================
+// Poster Generator V2
+// Script Part 1
+// ===================================
+
+
+const canvas = document.getElementById("posterCanvas");
+const ctx = canvas.getContext("2d");
+
+const template = new Image();
+
+template.src = "poster-template.png";
+
+let userImage = null;
+
+
+// Inputs
 
 const nameInput = document.getElementById("name");
 const mobileInput = document.getElementById("mobile");
 
-const namePreview = document.getElementById("namePreview");
-const mobilePreview = document.getElementById("mobilePreview");
 
-const uploadBtn = document.getElementById("uploadBtn");
+// Buttons
 
+const uploadPhotoBtn = document.getElementById("uploadPhotoBtn");
 const photoInput = document.getElementById("photoInput");
 
-const photoMenu = document.getElementById("photoMenu");
+const photoOptions = document.getElementById("photoOptions");
 
 const cameraBtn = document.getElementById("cameraBtn");
-
 const galleryBtn = document.getElementById("galleryBtn");
 
-const cancelBtn = document.getElementById("cancelBtn");
+const closeSheetBtn = document.getElementById("closeSheetBtn");
 
-const userPhoto = document.getElementById("userPhoto");
+
+// ===================================
+// Load Template
+// ===================================
+
+template.onload = () => {
+
+    drawPoster();
+
+};
+
+
+// ===================================
+// Draw Poster
+// ===================================
+
+function drawPoster(){
+
+    ctx.clearRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+
+    ctx.drawImage(
+        template,
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+
+    if(userImage){
+
+        ctx.drawImage(
+            userImage,
+            250,
+            250,
+            580,
+            580
+        );
+
+    }
+
+
+    // Name
+
+    ctx.font = "bold 70px Arial";
+
+    ctx.fillStyle = "#000";
+
+    ctx.textAlign = "center";
+
+    ctx.fillText(
+        nameInput.value || "Your Name",
+        540,
+        980
+    );
+
+
+    // Mobile
+
+    ctx.font = "45px Arial";
+
+    ctx.fillText(
+        mobileInput.value || "9876543210",
+        540,
+        1060
+    );
+
+
+}
+
+
+
+// Live Update
+
+nameInput.addEventListener(
+"input",
+drawPoster
+);
+
+
+mobileInput.addEventListener(
+"input",
+drawPoster
+);
+
+
+
+// ===================================
+// Upload Menu
+// ===================================
+
+
+uploadPhotoBtn.onclick = ()=>{
+
+    photoOptions.style.display="block";
+
+};
+
+
+
+closeSheetBtn.onclick = ()=>{
+
+    photoOptions.style.display="none";
+
+};
+
+
+
+// Camera
+
+cameraBtn.onclick = ()=>{
+
+    photoInput.setAttribute(
+        "capture",
+        "user"
+    );
+
+    photoInput.click();
+
+    photoOptions.style.display="none";
+
+};
+
+
+
+// Gallery
+
+galleryBtn.onclick = ()=>{
+
+    photoInput.removeAttribute(
+        "capture"
+    );
+
+    photoInput.click();
+
+    photoOptions.style.display="none";
+
+};
+
+
+
+// Select Image
+
+photoInput.addEventListener(
+"change",
+(e)=>{
+
+
+    const file = e.target.files[0];
+
+
+    if(!file) return;
+
+
+    const reader = new FileReader();
+
+
+    reader.onload = (event)=>{
+
+
+        const img = new Image();
+
+
+        img.onload = ()=>{
+
+            userImage = img;
+
+            drawPoster();
+
+        };
+
+
+        img.src = event.target.result;
+
+
+    };
+
+
+    reader.readAsDataURL(file);
+
+
+});
+// ===================================
+// Crop Editor Part 2
+// ===================================
+
 
 const cropModal = document.getElementById("cropModal");
 
 const cropImage = document.getElementById("cropImage");
 
+const doneCropBtn = document.getElementById("doneCropBtn");
+
+const cancelCropBtn = document.getElementById("cancelCropBtn");
+
+
+const zoomInBtn = document.getElementById("zoomInBtn");
+
+const zoomOutBtn = document.getElementById("zoomOutBtn");
+
+const rotateLeftBtn = document.getElementById("rotateLeftBtn");
+
+const rotateRightBtn = document.getElementById("rotateRightBtn");
+
+
 let cropper = null;
 
 
-// ===============================
-// Live Preview
-// ===============================
 
-nameInput.addEventListener("input", () => {
+// Replace image loading from Part 1
 
-    if(nameInput.value.trim()==""){
+photoInput.addEventListener(
+"change",
+(e)=>{
 
-        namePreview.innerText="Your Name";
 
-    }else{
+const file = e.target.files[0];
 
-        namePreview.innerText=nameInput.value;
 
-    }
+if(!file) return;
+
+
+const reader = new FileReader();
+
+
+
+reader.onload=(event)=>{
+
+
+cropImage.src = event.target.result;
+
+
+cropModal.style.display="flex";
+
+
+
+if(cropper){
+
+cropper.destroy();
+
+}
+
+
+
+cropper = new Cropper(
+cropImage,
+{
+
+aspectRatio:1,
+
+viewMode:1,
+
+dragMode:"move",
+
+autoCropArea:1,
+
+background:false,
+
+responsive:true,
+
+movable:true,
+
+zoomable:true,
+
+rotatable:true,
+
+scalable:false,
+
+
+ready(){
+
+// mirror remove
+
+cropImage.style.transform="scaleX(1)";
+
+}
+
+
+}
+
+);
+
+
+
+};
+
+
+reader.readAsDataURL(file);
+
 
 });
 
 
-mobileInput.addEventListener("input",()=>{
-
-    if(mobileInput.value.trim()==""){
-
-        mobilePreview.innerText="9876543210";
-
-    }else{
-
-        mobilePreview.innerText=mobileInput.value;
-
-    }
-
-});
 
 
-// ===============================
-// Upload Button
-// ===============================
 
-uploadBtn.onclick=()=>{
+// Zoom Controls
 
-    photoMenu.style.display="block";
+
+zoomInBtn.onclick=()=>{
+
+if(cropper){
+
+cropper.zoom(0.1);
+
+}
 
 };
 
 
-// ===============================
-// Close Menu
-// ===============================
 
-cancelBtn.onclick=()=>{
+zoomOutBtn.onclick=()=>{
 
-    photoMenu.style.display="none";
+if(cropper){
 
-};
+cropper.zoom(-0.1);
 
-
-// ===============================
-// Camera
-// ===============================
-
-cameraBtn.onclick=()=>{
-
-    photoInput.setAttribute("capture","environment");
-
-    photoInput.click();
-
-    photoMenu.style.display="none";
+}
 
 };
 
 
-// ===============================
-// Gallery
-// ===============================
-
-galleryBtn.onclick=()=>{
-
-    photoInput.removeAttribute("capture");
-
-    photoInput.click();
-
-    photoMenu.style.display="none";
-
-};
 
 
-// ===============================
-// Select Image
-// ===============================
-
-photoInput.addEventListener("change",(e)=>{
-
-    const file=e.target.files[0];
-
-    if(!file){
-
-        return;
-
-    }
-
-    const reader=new FileReader();
-
-    reader.onload=function(event){
-
-        cropImage.src=event.target.result;
-
-        cropModal.style.display="flex";
-
-    }
-
-    reader.readAsDataURL(file);
-
-});
-// ===============================
-// Cropper Start
-// ===============================
-
-photoInput.addEventListener("change",(e)=>{
-
-    const file=e.target.files[0];
-
-    if(!file) return;
-
-    const reader=new FileReader();
-
-    reader.onload=function(event){
-
-        cropImage.src=event.target.result;
-
-        cropModal.style.display="flex";
-
-        if(cropper){
-
-            cropper.destroy();
-
-        }
-
-        cropImage.onload=function(){
-
-            cropper=new Cropper(cropImage,{
-
-                aspectRatio:245/342,
-
-                viewMode:1,
-
-                dragMode:"move",
-
-                autoCropArea:1,
-
-                responsive:true,
-
-                background:false,
-
-                movable:true,
-
-                zoomable:true,
-
-                scalable:false,
-
-                rotatable:true
-
-            });
-
-        };
-
-    };
-
-    reader.readAsDataURL(file);
-
-});
-
-
-// ===============================
-// Zoom
-// ===============================
-
-document.getElementById("zoomInBtn").onclick=()=>{
-
-    if(cropper){
-
-        cropper.zoom(0.1);
-
-    }
-
-};
-
-
-document.getElementById("zoomOutBtn").onclick=()=>{
-
-    if(cropper){
-
-        cropper.zoom(-0.1);
-
-    }
-
-};
-
-
-// ===============================
 // Rotate
-// ===============================
-
-document.getElementById("rotateLeftBtn").onclick=()=>{
-
-    if(cropper){
-
-        cropper.rotate(-90);
-
-    }
-
-};
 
 
-document.getElementById("rotateRightBtn").onclick=()=>{
+rotateLeftBtn.onclick=()=>{
 
-    if(cropper){
+if(cropper){
 
-        cropper.rotate(90);
+cropper.rotate(-90);
 
-    }
+}
 
 };
 
 
-// ===============================
-// Cancel Crop
-// ===============================
+rotateRightBtn.onclick=()=>{
 
-document.getElementById("cropCancelBtn").onclick=()=>{
+if(cropper){
 
-    cropModal.style.display="none";
+cropper.rotate(90);
 
-    if(cropper){
-
-        cropper.destroy();
-
-        cropper=null;
-
-    }
-
-};
-// ===============================
-// Save Cropped Image
-// ===============================
-
-document.getElementById("cropSaveBtn").onclick = () => {
-
-    if (!cropper) return;
-
-    const canvas = cropper.getCroppedCanvas({
-
-        width:245,
-
-        height:342,
-
-        imageSmoothingQuality:"high"
-
-    });
-
-    userPhoto.src = canvas.toDataURL("image/png");
-
-    cropModal.style.display = "none";
-
-    cropper.destroy();
-
-    cropper = null;
+}
 
 };
 
 
-// ===============================
-// Generate Button
-// ===============================
 
-const generateBtn = document.getElementById("generateBtn");
 
-const downloadBtn = document.getElementById("downloadBtn");
+// Done
 
-generateBtn.onclick = () => {
 
-    if(userPhoto.src==""){
+doneCropBtn.onclick=()=>{
 
-        alert("Please upload photo first.");
 
-        return;
+if(!cropper) return;
 
-    }
 
-    html2canvas(document.getElementById("poster"),{
 
-        useCORS:true,
+const croppedCanvas =
+cropper.getCroppedCanvas({
 
-        scale:3
+width:700,
 
-    }).then((canvas)=>{
+height:700,
 
-        const image = canvas.toDataURL("image/png");
+imageSmoothingEnabled:true,
 
-        downloadBtn.href = image;
+imageSmoothingQuality:"high"
 
-        downloadBtn.download = "Shubh-Labh-Poster.png";
+});
 
-        downloadBtn.style.display = "block";
 
-        downloadBtn.scrollIntoView({
 
-            behavior:"smooth"
+const img = new Image();
 
-        });
 
-    });
+img.onload=()=>{
+
+
+userImage = img;
+
+
+drawPoster();
+
 
 };
 
 
-// ===============================
-// Close Bottom Menu
-// ===============================
+
+img.src = croppedCanvas.toDataURL(
+"image/png"
+);
+
+
+
+cropModal.style.display="none";
+
+
+cropper.destroy();
+
+cropper=null;
+
+
+};
+
+
+
+
+
+// Cancel
+
+
+cancelCropBtn.onclick=()=>{
+
+
+cropModal.style.display="none";
+
+
+if(cropper){
+
+cropper.destroy();
+
+cropper=null;
+
+}
+
+
+};
+// ===================================
+// Generate & Download Part 3
+// ===================================
+
+
+const generateBtn =
+document.getElementById("generateBtn");
+
+
+const downloadBtn =
+document.getElementById("downloadBtn");
+
+
+
+
+// Generate Poster
+
+generateBtn.onclick = ()=>{
+
+
+if(!userImage){
+
+alert("Please upload photo first");
+
+return;
+
+}
+
+
+
+generateBtn.innerHTML =
+"Generating...";
+
+
+
+setTimeout(()=>{
+
+
+const image =
+canvas.toDataURL(
+"image/png",
+1.0
+);
+
+
+
+downloadBtn.href = image;
+
+
+downloadBtn.style.display =
+"block";
+
+
+
+downloadBtn.click();
+
+
+
+generateBtn.innerHTML =
+"✨ Generate Poster";
+
+
+
+},500);
+
+
+
+};
+
+
+
+
+// Download Button Text
+
+downloadBtn.onclick = ()=>{
+
+downloadBtn.innerHTML =
+"⬇ Download Poster";
+
+};
+
+
+
+
+// Close popup outside click
 
 window.onclick=(e)=>{
 
-    if(e.target===photoMenu){
 
-        photoMenu.style.display="none";
+if(e.target === photoOptions){
 
-    }
+photoOptions.style.display="none";
+
+}
+
+
+
+if(e.target === cropModal){
+
+cropModal.style.display="none";
+
+
+if(cropper){
+
+cropper.destroy();
+
+cropper=null;
+
+}
+
+}
+
 
 };
+
+
+
+// Prevent drag image issue
+
+document.addEventListener(
+"dragstart",
+(e)=>{
+
+e.preventDefault();
+
+});
