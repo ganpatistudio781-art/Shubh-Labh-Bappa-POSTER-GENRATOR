@@ -1,0 +1,364 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+    background:#f3f5f9;
+    color:#222;
+}
+
+.container{
+    width:100%;
+    max-width:520px;
+    margin:auto;
+    padding:15px;
+}
+
+header{
+    background:linear-gradient(135deg,#ff8a00,#ff5a00);
+    color:#fff;
+    padding:20px;
+    border-radius:18px;
+    text-align:center;
+    box-shadow:0 10px 25px rgba(0,0,0,.15);
+}
+
+header h1{
+    font-size:28px;
+    margin-bottom:8px;
+}
+
+header p{
+    font-size:15px;
+    opacity:.95;
+}
+
+.youtubeBtn{
+    display:inline-block;
+    margin-top:15px;
+    background:#ff0000;
+    color:#fff;
+    text-decoration:none;
+    padding:12px 22px;
+    border-radius:30px;
+    font-weight:bold;
+}
+
+.previewSection{
+    margin-top:20px;
+}
+
+.previewSection h2{
+    text-align:center;
+    margin-bottom:15px;
+}
+
+#poster{
+    position:relative;
+    width:100%;
+    aspect-ratio:1080/1350;
+    background:#fff;
+    border-radius:18px;
+    overflow:hidden;
+    box-shadow:0 10px 30px rgba(0,0,0,.15);
+}
+
+#template{
+    width:100%;
+    display:block;
+}
+
+#userPhoto{
+    position:absolute;
+    left:6%;
+    top:54%;
+    width:24%;
+    height:28%;
+    object-fit:cover;
+    border-radius:8px;
+    background:#ddd;
+}
+
+#namePreview{
+    position:absolute;
+    left:11%;
+    top:91%;
+    width:28%;
+    text-align:center;
+    font-size:18px;
+    font-weight:bold;
+    color:#000;
+}
+
+#mobilePreview{
+    position:absolute;
+    left:12%;
+    top:98%;
+    width:26%;
+    text-align:center;
+    font-size:16px;
+    color:#000;
+}
+/* Form */
+
+.formSection{
+    margin-top:25px;
+    background:#fff;
+    border-radius:18px;
+    padding:20px;
+    box-shadow:0 10px 25px rgba(0,0,0,.12);
+}
+
+.formSection h2{
+    text-align:center;
+    margin-bottom:20px;
+}
+
+.formSection label{
+    display:block;
+    margin:15px 0 8px;
+    font-weight:600;
+}
+
+.formSection input{
+    width:100%;
+    padding:14px;
+    border:2px solid #ddd;
+    border-radius:12px;
+    font-size:16px;
+    outline:none;
+    transition:.3s;
+}
+
+.formSection input:focus{
+    border-color:#ff7a00;
+}
+
+.uploadBtn,
+.generateBtn,
+.downloadBtn{
+    width:100%;
+    border:none;
+    border-radius:14px;
+    padding:15px;
+    font-size:17px;
+    font-weight:bold;
+    cursor:pointer;
+    margin-top:18px;
+    transition:.3s;
+}
+
+.uploadBtn{
+    background:#1976d2;
+    color:#fff;
+}
+
+.generateBtn{
+    background:#ff7a00;
+    color:#fff;
+}
+
+.downloadBtn{
+    display:block;
+    background:#28a745;
+    color:#fff;
+    text-decoration:none;
+    text-align:center;
+}
+
+.uploadBtn:hover,
+.generateBtn:hover,
+.downloadBtn:hover{
+    transform:scale(1.02);
+}
+
+/* Camera / Gallery Menu */
+
+.photoMenu{
+    display:none;
+    position:fixed;
+    left:0;
+    right:0;
+    bottom:0;
+    background:#fff;
+    border-radius:20px 20px 0 0;
+    padding:20px;
+    box-shadow:0 -10px 25px rgba(0,0,0,.2);
+    z-index:999;
+}
+
+.photoMenu button{
+    width:100%;
+    padding:15px;
+    margin:8px 0;
+    border:none;
+    border-radius:12px;
+    font-size:17px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+#cameraBtn{
+    background:#2196f3;
+    color:#fff;
+}
+
+#galleryBtn{
+    background:#4caf50;
+    color:#fff;
+}
+
+#cancelBtn{
+    background:#e53935;
+    color:#fff;
+}
+/* ===========================
+   Crop Modal
+=========================== */
+
+.cropModal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.85);
+    display:none;
+    justify-content:center;
+    align-items:center;
+    z-index:9999;
+}
+
+.cropContainer{
+    width:95%;
+    max-width:500px;
+    background:#fff;
+    border-radius:20px;
+    padding:20px;
+    text-align:center;
+}
+
+.cropContainer h2{
+    margin-bottom:15px;
+    color:#222;
+}
+
+#cropImage{
+    width:100%;
+    max-height:420px;
+    display:block;
+}
+
+.cropTools{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:10px;
+    margin-top:15px;
+}
+
+.cropTools button{
+    border:none;
+    background:#ff7a00;
+    color:#fff;
+    padding:12px;
+    border-radius:12px;
+    font-size:18px;
+    cursor:pointer;
+}
+
+.cropButtons{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin-top:18px;
+}
+
+.cropButtons button{
+    border:none;
+    padding:14px;
+    border-radius:12px;
+    font-size:16px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+#cropCancelBtn{
+    background:#e53935;
+    color:#fff;
+}
+
+#cropSaveBtn{
+    background:#28a745;
+    color:#fff;
+}
+
+/* ===========================
+   Responsive
+=========================== */
+
+@media(max-width:480px){
+
+header h1{
+    font-size:22px;
+}
+
+.previewSection h2,
+.formSection h2{
+    font-size:20px;
+}
+
+#namePreview{
+    font-size:16px;
+}
+
+#mobilePreview{
+    font-size:14px;
+}
+
+.uploadBtn,
+.generateBtn,
+.downloadBtn{
+    font-size:16px;
+}
+
+}
+
+/* ===========================
+   Animation
+=========================== */
+
+button{
+    transition:.25s ease;
+}
+
+button:hover{
+    transform:scale(1.03);
+}
+
+button:active{
+    transform:scale(.98);
+}
+
+input{
+    transition:.25s;
+}
+
+input:focus{
+    box-shadow:0 0 0 4px rgba(255,122,0,.15);
+}
+
+.photoMenu{
+    animation:slideUp .25s ease;
+}
+
+@keyframes slideUp{
+
+from{
+    transform:translateY(100%);
+}
+
+to{
+    transform:translateY(0);
+}
+
+}

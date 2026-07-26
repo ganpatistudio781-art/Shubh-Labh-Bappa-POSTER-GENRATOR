@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Shubh Labh Poster Studio</title>
+
+<link rel="stylesheet" href="css/style.css">
+
+<link rel="stylesheet"
+href="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+<header>
+
+<h1>🎨 Shubh Labh Poster Studio</h1>
+
+<p>Create Your Independence Day Poster</p>
+
+<a class="youtubeBtn"
+href=https://youtube.com/@ganpati_shubhlabh23?si=0FgHuEq8F_CbmC7m">
+
+🔴 Visit YouTube Channel
+
+</a>
+
+</header>
+
+<section class="previewSection">
+
+<h2>Live Preview</h2>
+
+<div id="poster">
+
+<img
+id="template"
+src="Poster-template.png"
+alt="Poster">
+
+<img
+id="userPhoto"
+src=""
+alt="Photo">
+
+<div id="namePreview">
+Your Name
+</div>
+
+<div id="mobilePreview">
+9876543210
+</div>
+
+</div>
+
+</section>
+
+<section class="formSection">
+
+<h2>Poster Details</h2>
+<label for="name">👤 Name</label>
+
+<input
+type="text"
+id="name"
+placeholder="Enter Your Name"
+maxlength="30">
+
+
+<label for="mobile">📱 Mobile Number</label>
+
+<input
+type="tel"
+id="mobile"
+placeholder="Enter Mobile Number"
+maxlength="10">
+
+
+<label>📷 Upload Photo</label>
+
+<button
+type="button"
+id="uploadBtn"
+class="uploadBtn">
+
+Upload Photo
+
+</button>
+
+
+<input
+type="file"
+id="photoInput"
+accept="image/*"
+capture="environment"
+hidden>
+
+
+<div
+id="photoMenu"
+class="photoMenu">
+
+<button id="galleryBtn">
+
+📷 Camera
+
+</button>
+
+<button id="cameraBtn">
+
+🖼 Gallery
+
+</button>
+
+<button id="cancelBtn">
+
+❌ Cancel
+
+</button>
+
+</div>
+
+
+<button
+id="generateBtn"
+class="generateBtn">
+
+🎉 Generate Poster
+
+</button>
+
+
+<a
+id="downloadBtn"
+class="downloadBtn"
+style="display:none;">
+
+⬇ Download Poster
+
+</a>
+
+</section>
+<!-- Crop Photo Modal -->
+
+<div id="cropModal" class="cropModal">
+
+    <div class="cropContainer">
+
+        <h2>Adjust Photo</h2>
+
+        <img id="cropImage" src="" alt="Crop Image">
+
+        <div class="cropTools">
+
+            <button id="zoomInBtn">🔍 +</button>
+
+            <button id="zoomOutBtn">🔍 -</button>
+
+            <button id="rotateLeftBtn">↺</button>
+
+            <button id="rotateRightBtn">↻</button>
+
+        </div>
+
+        <div class="cropButtons">
+
+            <button id="cropCancelBtn">
+                ❌ Cancel
+            </button>
+
+            <button id="cropSaveBtn">
+                ✅ Done
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.js"></script>
+
+<script src="js/script.js"></script>
+
+</body>
+
+</html>
