@@ -4,14 +4,14 @@
 <head>
 
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Shubh Labh Poster Studio</title>
+<title>Poster Generator</title>
 
-<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.css">
 
-<link rel="stylesheet"
-href="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.css">
+<link rel="stylesheet" href="style.css">
 
 </head>
 
@@ -21,147 +21,106 @@ href="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.css">
 
 <header>
 
-<h1> Shubh Labh Poster Studio</h1>
+<h1>Poster Generator</h1>
 
-<p>Create Your  Poster</p>
-
-<a class="youtubeBtn"
-href=https://youtube.com/@ganpati_shubhlabh23?si=0FgHuEq8F_CbmC7m">
-
-🔴 Visit YouTube Channel
-
-</a>
+<p>Create Beautiful Posters in Seconds</p>
 
 </header>
 
-<section class="previewSection">
+<section class="previewCard">
 
-<h2>Live Preview</h2>
+<div class="posterBox">
 
-<div id="poster">
-
-<img
-id="template"
-src="Poster-template.png"
-alt="Poster">
-
-<img
-id="userPhoto"
-src=""
-alt="Photo">
-
-<div id="namePreview">
-Your Name
-</div>
-
-<div id="mobilePreview">
-9876543210
-</div>
+<canvas id="posterCanvas" width="1080" height="1350"></canvas>
 
 </div>
 
 </section>
 
-<section class="formSection">
+<section class="formCard">
 
 <h2>Poster Details</h2>
-<label for="name">👤 Name</label>
+
+<label>Name</label>
 
 <input
 type="text"
 id="name"
-placeholder="Enter Your Name"
+placeholder="Enter Name"
 maxlength="30">
 
-
-<label for="mobile">📱 Mobile Number</label>
+<label>Mobile Number</label>
 
 <input
 type="tel"
 id="mobile"
 placeholder="Enter Mobile Number"
 maxlength="10">
+<label>Upload Photo</label>
 
-
-<label>📷 Upload Photo</label>
-
-<button
-type="button"
-id="uploadBtn"
-class="uploadBtn">
-
-Upload Photo
-
+<button id="uploadPhotoBtn" class="primaryBtn">
+📷 Upload Photo
 </button>
-
 
 <input
 type="file"
 id="photoInput"
 accept="image/*"
-capture="environment"
 hidden>
 
+<div id="photoOptions" class="bottomSheet">
 
-<div
-id="photoMenu"
-class="photoMenu">
+<div class="sheetBox">
 
-<button id="galleryBtn">
+<h3>Select Photo</h3>
 
- Gallery
-
+<button id="cameraBtn" class="sheetBtn">
+📷 Camera
 </button>
 
-<button id="cameraBtn">
-
- Camera
-
+<button id="galleryBtn" class="sheetBtn">
+🖼 Gallery
 </button>
 
-<button id="cancelBtn">
-
+<button id="closeSheetBtn" class="sheetBtn cancel">
 ❌ Cancel
-
 </button>
 
 </div>
 
+</div>
 
-<button
-id="generateBtn"
-class="generateBtn">
+<button id="generateBtn" class="primaryBtn">
 
-🎉 Generate Poster
+✨ Generate Poster
 
 </button>
-
 
 <a
 id="downloadBtn"
 class="downloadBtn"
-style="display:none;">
+download="Poster.png">
 
 ⬇ Download Poster
 
 </a>
 
 </section>
-<!-- Crop Photo Modal -->
+<!-- Crop Editor -->
 
 <div id="cropModal" class="cropModal">
 
-    <div class="cropContainer">
+    <div class="cropCard">
 
         <h2>Adjust Photo</h2>
 
-        <img id="cropImage" src="" alt="Crop Image">
+        <img id="cropImage">
 
-        <div class="cropTools">
+        <div class="toolBar">
 
-            <button id="zoomInBtn">🔍 +</button>
+            <button id="zoomInBtn">➕</button>
 
-            <button id="zoomOutBtn">🔍 -</button>
+            <button id="zoomOutBtn">➖</button>
 
             <button id="rotateLeftBtn">↺</button>
 
@@ -169,14 +128,18 @@ style="display:none;">
 
         </div>
 
-        <div class="cropButtons">
+        <div class="actionBar">
 
-            <button id="cropCancelBtn">
-                ❌ Cancel
+            <button id="cancelCropBtn" class="cancelBtn">
+
+                Cancel
+
             </button>
 
-            <button id="cropSaveBtn">
-                ✅ Done
+            <button id="doneCropBtn" class="doneBtn">
+
+                Done
+
             </button>
 
         </div>
@@ -185,20 +148,27 @@ style="display:none;">
 
 </div>
 
+<footer>
+
+<a
+href="https://youtube.com/@YOURCHANNEL"
+target="_blank"
+class="youtubeBtn">
+
+📺 Visit Our YouTube Channel
+
+</a>
+
+</footer>
+
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.js"></script>
 
-<script src="js/script.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<script src="script.js"></script>
 
 </body>
 
 </html>
-<script
- src="https://cdn.jsdelivr.net/npm/cropperj
- s@1.6.2/dist/cropper.min.js"></script>
-<script
- src="https://cdnjs.cloudflare.com/ajax
- /libs/html2canvas/1.4.1/html2canvas.min
- .js"></script>
-<script src="script.js"></script>
