@@ -11,23 +11,15 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Ensure storage directories exist (for local runs)
-const uploadsDir = path.join(__dirname, 'uploads');
-const generatedDir = path.join(__dirname, 'generated');
-
-if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
-if (!fs.existsSync(generatedDir)) fs.mkdirSync(generatedDir, { recursive: true });
-
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/generated', express.static(generatedDir));
 
-// Multer in-memory storage for Sharp processing
+// Multer in-memory storage
 const storage = multer.memoryStorage();
 const upload = multer({
   storage,
-  limits: { fileSize: 20 * 1024 * 1024 }, // 20MB
+  limits: { fileSize: 20 * 1024 * 1024 }, // 20MB limit
   fileFilter: (req, file, cb) => {
     const allowed = /jpeg|jpg|png|webp|heic/;
     const ext = path.extname(file.originalname).toLowerCase().replace('.', '');
@@ -40,11 +32,10 @@ const upload = multer({
   }
 });
 
-// SVG Helper for high-quality text rendering via Sharp
+// SVG Helper for high-quality text rendering
 function createTextSVG(name, mobile, config) {
   const { nameX, nameY, mobileX, mobileY, nameFontSize, mobileFontSize, nameColor, mobileColor } = config;
 
-  // Escape XML characters
   const safeName = (name || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   const safeMobile = (mobile || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
@@ -97,15 +88,15 @@ app.post('/api/generate-poster', upload.single('photo'), async (req, res) => {
 
     const templatePath = path.join(__dirname, 'public', 'poster-template.png');
     if (!fs.existsSync(templatePath)) {
-      return res.status(500).json({ success: false, message: 'Template image poster-template.png not found.' });
+      return res.status(500).json({ success: false, message: 'Template image poster-template.png missing.' });
     }
 
     const composites = [];
 
-    // 1. Process User Photo if supplied
+    // 1. User photo processing
     if (req.file) {
       const resizedPhotoBuffer = await sharp(req.file.buffer)
-        .rotate() // Auto-orient EXIF
+        .rotate()
         .resize(pWidth, pHeight, { fit: 'cover', position: 'center' })
         .toFormat('png')
         .toBuffer();
@@ -117,7 +108,7 @@ app.post('/api/generate-poster', upload.single('photo'), async (req, res) => {
       });
     }
 
-    // 2. Process Text overlay via SVG
+    // 2. Text SVG composite
     const svgTextBuffer = createTextSVG(name, mobile, config);
     composites.push({
       input: svgTextBuffer,
@@ -125,60 +116,48 @@ app.post('/api/generate-poster', upload.single('photo'), async (req, res) => {
       top: 0
     });
 
-    // 3. Composite everything onto template
-    const timestamp = Date.now();
-    const filename = `poster_${timestamp}.png`;
-    const outputPath = path.join(generatedDir, filename);
-
-    await sharp(templatePath)
+    // 3. Composite purely IN-MEMORY to a buffer (No disk writing for Vercel)
+    const finalPosterBuffer = await sharp(templatePath)
       .resize(1080, 1350)
       .composite(composites)
       .png({ quality: 100, compressionLevel: 6 })
-      .toFile(outputPath);
+      .toBuffer();
 
-    // Save metadata to uploads/data.json
-    const dataJsonPath = path.join(uploadsDir, 'data.json');
-    let recordList = [];
-    if (fs.existsSync(dataJsonPath)) {
-      try {
-        const fileData = fs.readFileSync(dataJsonPath, 'utf8');
-        recordList = JSON.parse(fileData);
-      } catch (err) {
-        recordList = [];
-      }
-    }
+    const base64Image = `data:image/png;base64,${finalPosterBuffer.toString('base64')}`;
 
-    const record = {
-      id: timestamp,
-      name: name || '',
-      mobile: mobile || '',
-      timestamp: new Date().toISOString(),
-      generatedFile: filename
-    };
-    recordList.push(record);
-
+    // Optional safe ephemeral logging in Vercel's /tmp folder
     try {
-      fs.writeFileSync(dataJsonPath, JSON.stringify(recordList, null, 2));
+      const tmpPath = '/tmp/data.json';
+      let recordList = [];
+      if (fs.existsSync(tmpPath)) {
+        recordList = JSON.parse(fs.readFileSync(tmpPath, 'utf8'));
+      }
+      recordList.push({
+        id: Date.now(),
+        name: name || '',
+        mobile: mobile || '',
+        timestamp: new Date().toISOString()
+      });
+      fs.writeFileSync(tmpPath, JSON.stringify(recordList, null, 2));
     } catch (e) {
-      console.warn('Could not write log locally (Vercel serverless environment)');
+      // Ignored if ephemeral write fails
     }
-
-    // Return generated poster URL
-    const fileBuffer = fs.readFileSync(outputPath);
-    const base64Image = `data:image/png;base64,${fileBuffer.toString('base64')}`;
 
     return res.json({
       success: true,
-      imageUrl: `/generated/${filename}`,
       imageData: base64Image
     });
 
   } catch (error) {
     console.error('Generation Error:', error);
-    res.status(500).json({ success: false, message: error.message || 'Internal server error.' });
+    return res.status(500).json({ success: false, message: error.message || 'Internal server error.' });
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`Poster Generator running on http://localhost:${PORT}`);
-});
+// Export default app for Vercel Serverless
+export default app;
+
+// Listen locally if running outside Vercel
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+}
