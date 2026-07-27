@@ -315,12 +315,12 @@
             ctx.fillText("Please place poster-template.png in folder", canvas.width / 2, canvas.height / 2);  
         }  
 
-        // Photo: Pichle X (65) mein 5 pixel aur jodkar right shift (65 + 5 = 70)
-        // Upar aur neeche se 20-20 pixel size badhaya (Y ko 20 upar yaani 843 - 20 = 823 kiya, 
-        // aur height ko 290 + 20 (upar) + 20 (neeche) = 330 kiya)
+        // Photo: Pichle X (70) Fixed, Y (823) Fixed. 
+        // Width: Original width (235) se 15 pixel aur right side extend kiya (235 + 15 = 250)
+        // Height: Fixed (330)
         let boxX = 70;   
         let boxY = 823;  
-        let boxWidth = 235;   
+        let boxWidth = 250;   
         let boxHeight = 330;  
 
         if (croppedImageObj) {  
@@ -377,7 +377,7 @@
                 }  
                 const image = document.getElementById('imageToCrop');  
                 cropper = new Cropper(image, {  
-                    aspectRatio: 235 / 330,  // Updated aspect ratio matching new boxWidth / boxHeight
+                    aspectRatio: 250 / 330, // Updated aspect ratio matching new boxWidth / boxHeight
                     viewMode: 1,  
                     autoCropArea: 1,  
                 });  
@@ -396,39 +396,4 @@
     }  
 
     function zoomIn() { if (cropper) cropper.zoom(0.1); }  
-    function zoomOut() { if (cropper) cropper.zoom(-0.1); }  
-    function rotateLeft() { if (cropper) cropper.rotate(-90); }  
-    function rotateRight() { if (cropper) cropper.rotate(90); }  
-
-    function cropAndSaveImage() {  
-        if (cropper) {  
-            const canvasCropped = cropper.getCroppedCanvas({  
-                width: 235,  
-                height: 330  
-            });  
-              
-            croppedImageObj = new Image();  
-            croppedImageObj.src = canvasCropped.toDataURL();  
-            croppedImageObj.onload = function() {  
-                updatePoster();  
-                closeCropModal();  
-            }  
-        }  
-    }  
-
-    function downloadPoster() {  
-        updatePoster();  
-        setTimeout(() => {  
-            const dataUrl = canvas.toDataURL('image/png');  
-            const link = document.createElement('a');  
-            link.download = 'shubh-labh-bappa-poster.png';  
-            link.href = dataUrl;  
-            document.body.appendChild(link);  
-            link.click();  
-            document.body.removeChild(link);  
-        }, 100);  
-    }  
-</script>  
-
-</body>  
-</html>
+    function zoomOut() { if (cropper) cropper.zoom(-0.1);
