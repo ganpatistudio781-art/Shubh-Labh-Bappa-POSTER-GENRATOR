@@ -315,9 +315,9 @@
             ctx.fillText("Please place poster-template.png in folder", canvas.width / 2, canvas.height / 2);  
         }  
 
-        // Photo: Pichle coordinates (78, 1063) se 100 pixel upar (1063 - 100 = 963)
+        // Photo: Pichle Y position (963) se 100 pixel aur upar (963 - 100 = 863)
         let boxX = 78;   
-        let boxY = 963;  
+        let boxY = 863;  
         let boxWidth = (272 - 113) + 35;   
         let boxHeight = (1061 - 883) + 20 + 40;  
 
@@ -328,16 +328,16 @@
         const name = document.getElementById('userName').value;  
         const number = document.getElementById('userNumber').value;  
 
-        // Name: Pichle position (1269) se 4 pixel aur upar (1269 - 4 = 1265)
+        // Name: Pichle position (1265) se 5 pixel aur upar (1265 - 5 = 1260)
         if (name) {  
             ctx.fillStyle = '#000000';  
             ctx.font = 'bold 36px Arial';  
             ctx.textAlign = 'left';  
             ctx.textBaseline = 'middle';  
-            ctx.fillText(name, 169, 1265);  
+            ctx.fillText(name, 169, 1260);  
         }  
 
-        // Mobile Number: Pichle position (1343) se 2 pixel aur upar (1343 - 2 = 1341)
+        // Mobile Number: Unchanged position (1341)
         if (number) {  
             ctx.fillStyle = '#000000';  
             ctx.font = 'bold 36px Arial';  
