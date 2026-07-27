@@ -2,79 +2,130 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> Poster Generator</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        /* Warm spiritual tone for the background */
-        body {
-            background-color: #fffaf0; 
-        }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Shubh Labh Poster Studio</title>
+    <!-- Google Fonts & FontAwesome Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- CropperJS CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
-<body class="min-h-screen flex items-center justify-center p-4">
+<body>
 
-    <!-- Main UI Card -->
-    <div class="bg-white border-t-4 border-orange-500 shadow-2xl rounded-2xl w-full max-w-md p-6 sm:p-8 space-y-6">
+    <main class="app-container">
         
-        <!-- Header -->
-        <div class="text-center">
-            <h1 class="text-3xl font-bold text-orange-600 mb-2">Poster Generator</h1>
-            <p class="text-orange-400 text-sm font-medium">Create your personalized  poster</p>
-        </div>
-
-        <!-- YouTube Channel Link -->
-        <div class="flex items-center justify-center bg-orange-50 rounded-lg p-3 border border-orange-200 shadow-sm">
-            <svg class="w-6 h-6 text-red-600 mr-2" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-            </svg>
-            <span class="text-gray-700 font-medium text-sm">Subscribe: </span>
-            <a href="https://youtube.com/@ganpati_shubhlabh23?si=BSfYGSNcZTXVtLz-" target="_blank" class="ml-2 text-orange-600 hover:text-orange-800 font-bold underline decoration-orange-400 decoration-2 transition">
-                shubh labh bappa
+        <!-- Header Banner -->
+        <header class="header-card">
+            <h1>Shubh Labh Poster Studio</h1>
+            <p>Create Your Poster</p>
+            <a href="https://youtube.com/@ganpati_shubhlabh23?si=BSfYGSNcZTXVtLz-" target="_blank" class="yt-button">
+                <span class="pulse-dot"></span>
+                <i class="fa-brands fa-youtube"></i> Visit YouTube Channel
             </a>
+        </header>
+
+        <!-- Section Title -->
+        <h2 class="section-title">Live Preview</h2>
+
+        <!-- Live Poster Preview -->
+        <div class="preview-card">
+            <div class="preview-container" id="preview-container">
+                <div class="preview-wrapper" id="preview-wrapper">
+                    <!-- Base Poster Template -->
+                    <img src="poster-template.png" alt="Poster Template" id="template-img" class="template-img" crossorigin="anonymous">
+                    
+                    <!-- Overlaid Photo -->
+                    <img id="preview-photo" class="preview-photo" style="display: none;">
+                    
+                    <!-- Overlaid Realtime Text -->
+                    <div id="preview-name" class="preview-text"></div>
+                    <div id="preview-mobile" class="preview-text"></div>
+                </div>
+            </div>
         </div>
 
-        <!-- Form Layout -->
-        <form class="space-y-5" onsubmit="event.preventDefault(); /* Add your generate script logic here */">
-            
-            <!-- 1. Name Field -->
-            <div>
-                <label for="name" class="block text-sm font-semibold text-gray-800 mb-1">Full Name</label>
-                <input type="text" id="name" placeholder="Enter your name" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition shadow-sm" required>
-            </div>
+        <!-- Inputs Card -->
+        <section class="form-card">
+            <h3 class="form-title">Poster Details</h3>
 
-            <!-- 2. Number Field -->
-            <div>
-                <label for="number" class="block text-sm font-semibold text-gray-800 mb-1">Mobile Number</label>
-                <input type="tel" id="number" placeholder="Enter your mobile number" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition shadow-sm" required>
-            </div>
-
-            <!-- 3. Upload Photo Field -->
-            <div>
-                <label for="photo" class="block text-sm font-semibold text-gray-800 mb-1">Upload Photo</label>
-                <div class="mt-1 flex justify-center px-6 pt-6 pb-6 border-2 border-gray-300 border-dashed rounded-lg hover:border-orange-500 hover:bg-orange-50 transition bg-gray-50 cursor-pointer" onclick="document.getElementById('photo').click()">
-                    <div class="space-y-2 text-center">
-                        <svg class="mx-auto h-12 w-12 text-orange-500" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
-                            <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
-                        <div class="flex text-sm text-gray-600 justify-center">
-                            <span class="relative cursor-pointer bg-transparent rounded-md font-bold text-orange-600 hover:text-orange-500 focus-within:outline-none">
-                                <span>Click to upload a file</span>
-                                <input id="photo" name="photo" type="file" class="sr-only" accept="image/*">
-                            </span>
-                        </div>
-                        <p class="text-xs text-gray-500">PNG, JPG up to 10MB</p>
-                    </div>
+            <div class="form-group">
+                <label for="nameInput">Full Name</label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-user"></i>
+                    <input type="text" id="nameInput" placeholder="Enter your name" autocomplete="off">
                 </div>
             </div>
 
-            <!-- 4. Generate Poster Button -->
-            <button type="submit" class="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold py-3.5 px-4 rounded-lg shadow-md hover:shadow-xl transition transform hover:-translate-y-0.5 mt-2">
-                Generate Poster
-            </button>
+            <div class="form-group">
+                <label for="mobileInput">Mobile Number</label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-phone"></i>
+                    <input type="tel" id="mobileInput" placeholder="Enter mobile number" maxlength="15" autocomplete="off">
+                </div>
+            </div>
 
-        </form>
+            <button class="btn btn-secondary" id="btn-upload">
+                <i class="fa-solid fa-camera"></i> Upload Photo
+            </button>
+            
+            <button class="btn btn-primary" id="btn-generate">
+                <i class="fa-solid fa-download"></i> Generate Poster
+            </button>
+        </section>
+
+    </main>
+
+    <!-- Mobile Bottom Sheet for Image Selection -->
+    <div class="bottom-sheet-overlay" id="sheet-overlay"></div>
+    <div class="bottom-sheet" id="bottom-sheet">
+        <div class="sheet-header">
+            <div class="sheet-drag-handle"></div>
+            <h3>Select Image Source</h3>
+        </div>
+        <div class="sheet-options">
+            <label class="sheet-option">
+                <i class="fa-solid fa-camera text-orange"></i>
+                <span>Take Photo (Camera)</span>
+                <input type="file" accept="image/*" capture="user" id="cameraInput" hidden>
+            </label>
+            <label class="sheet-option">
+                <i class="fa-solid fa-images text-orange"></i>
+                <span>Choose from Gallery</span>
+                <input type="file" accept="image/*" id="galleryInput" hidden>
+            </label>
+            <div class="sheet-option text-danger" id="btn-cancel-sheet">
+                <i class="fa-solid fa-xmark"></i>
+                <span>Cancel</span>
+            </div>
+        </div>
     </div>
 
+    <!-- Full Screen Crop Page -->
+    <div class="crop-page" id="crop-page">
+        <div class="crop-header">
+            <button id="btn-crop-cancel"><i class="fa-solid fa-arrow-left"></i></button>
+            <h2>Adjust & Crop Photo</h2>
+            <button id="btn-crop-done" class="btn-done"><i class="fa-solid fa-check"></i> Done</button>
+        </div>
+        <div class="crop-container">
+            <img id="crop-image" src="" alt="Crop Area">
+        </div>
+        <div class="crop-tools">
+            <button class="tool-btn" id="btn-rotate-left" title="Rotate Left"><i class="fa-solid fa-rotate-left"></i></button>
+            <button class="tool-btn" id="btn-rotate-right" title="Rotate Right"><i class="fa-solid fa-rotate-right"></i></button>
+            <button class="tool-btn" id="btn-flip-x" title="Flip Mirror"><i class="fa-solid fa-right-left"></i></button>
+        </div>
+    </div>
+
+    <!-- Loading Screen -->
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="spinner"></div>
+        <p>Generating HD Poster...</p>
+    </div>
+
+    <!-- CropperJS Script -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
