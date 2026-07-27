@@ -13,26 +13,13 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
-app.use(express.static(path.join(__dirname, 'public')));
 
-// Multer in-memory storage
 const storage = multer.memoryStorage();
 const upload = multer({
   storage,
-  limits: { fileSize: 20 * 1024 * 1024 }, // 20MB limit
-  fileFilter: (req, file, cb) => {
-    const allowed = /jpeg|jpg|png|webp|heic/;
-    const ext = path.extname(file.originalname).toLowerCase().replace('.', '');
-    const mime = file.mimetype;
-    if (allowed.test(ext) || allowed.test(mime)) {
-      cb(null, true);
-    } else {
-      cb(new Error('Only JPEG, JPG, PNG, WEBP, and HEIC images are allowed.'));
-    }
-  }
+  limits: { fileSize: 20 * 1024 * 1024 }
 });
 
-// SVG Helper for high-quality text rendering
 function createTextSVG(name, mobile, config) {
   const { nameX, nameY, mobileX, mobileY, nameFontSize, mobileFontSize, nameColor, mobileColor } = config;
 
@@ -65,7 +52,6 @@ function createTextSVG(name, mobile, config) {
   `);
 }
 
-// Generate Poster Route
 app.post('/api/generate-poster', upload.single('photo'), async (req, res) => {
   try {
     const { name, mobile, photoX, photoY, photoWidth, photoHeight } = req.body;
@@ -87,13 +73,24 @@ app.post('/api/generate-poster', upload.single('photo'), async (req, res) => {
     };
 
     const templatePath = path.join(__dirname, 'public', 'poster-template.png');
-    if (!fs.existsSync(templatePath)) {
-      return res.status(500).json({ success: false, message: 'Template image poster-template.png missing.' });
+    let templateBuffer;
+
+    if (fs.existsSync(templatePath)) {
+      templateBuffer = fs.readFileSync(templatePath);
+    } else {
+      // Fallback canvas if poster-template.png isn't committed yet
+      templateBuffer = await sharp({
+        create: {
+          width: 1080,
+          height: 1350,
+          channels: 4,
+          background: { r: 30, g: 27, b: 75, alpha: 1 }
+        }
+      }).png().toBuffer();
     }
 
     const composites = [];
 
-    // 1. User photo processing
     if (req.file) {
       const resizedPhotoBuffer = await sharp(req.file.buffer)
         .rotate()
@@ -108,7 +105,6 @@ app.post('/api/generate-poster', upload.single('photo'), async (req, res) => {
       });
     }
 
-    // 2. Text SVG composite
     const svgTextBuffer = createTextSVG(name, mobile, config);
     composites.push({
       input: svgTextBuffer,
@@ -116,32 +112,13 @@ app.post('/api/generate-poster', upload.single('photo'), async (req, res) => {
       top: 0
     });
 
-    // 3. Composite purely IN-MEMORY to a buffer (No disk writing for Vercel)
-    const finalPosterBuffer = await sharp(templatePath)
+    const finalPosterBuffer = await sharp(templateBuffer)
       .resize(1080, 1350)
       .composite(composites)
       .png({ quality: 100, compressionLevel: 6 })
       .toBuffer();
 
     const base64Image = `data:image/png;base64,${finalPosterBuffer.toString('base64')}`;
-
-    // Optional safe ephemeral logging in Vercel's /tmp folder
-    try {
-      const tmpPath = '/tmp/data.json';
-      let recordList = [];
-      if (fs.existsSync(tmpPath)) {
-        recordList = JSON.parse(fs.readFileSync(tmpPath, 'utf8'));
-      }
-      recordList.push({
-        id: Date.now(),
-        name: name || '',
-        mobile: mobile || '',
-        timestamp: new Date().toISOString()
-      });
-      fs.writeFileSync(tmpPath, JSON.stringify(recordList, null, 2));
-    } catch (e) {
-      // Ignored if ephemeral write fails
-    }
 
     return res.json({
       success: true,
@@ -154,10 +131,11 @@ app.post('/api/generate-poster', upload.single('photo'), async (req, res) => {
   }
 });
 
-// Export default app for Vercel Serverless
+// Serve static locally for development
+app.use(express.static(path.join(__dirname, 'public')));
+
 export default app;
 
-// Listen locally if running outside Vercel
 if (process.env.NODE_ENV !== 'production') {
   app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
 }
