@@ -315,9 +315,9 @@
             ctx.fillText("Please place poster-template.png in folder", canvas.width / 2, canvas.height / 2);  
         }  
 
-        // Photo Coordinates provided: 113,883 to 272,1061
+        // Photo Coordinates + 200px Neeche (883 + 200 = 1083, 1061 + 200 = 1261)
         let boxX = 113;   
-        let boxY = 883;  
+        let boxY = 883 + 200;  
         let boxWidth = 272 - 113;   // 159
         let boxHeight = 1061 - 883; // 178  
 
@@ -328,22 +328,22 @@
         const name = document.getElementById('userName').value;  
         const number = document.getElementById('userNumber').value;  
 
-        // Name Coordinates provided: 165,1110 to 297,1110
+        // Name Coordinates + 200px Neeche (1110 + 200 = 1310)
         if (name) {  
             ctx.fillStyle = '#000000';  
             ctx.font = 'bold 26px Arial';  
             ctx.textAlign = 'left';  
             ctx.textBaseline = 'middle';  
-            ctx.fillText(name, 165, 1110);  
+            ctx.fillText(name, 165, 1110 + 200);  
         }  
 
-        // Mobile Number Coordinates provided: 165,1154 to 297,1154
+        // Mobile Number Coordinates + 200px Neeche (1154 + 200 = 1354)
         if (number) {  
             ctx.fillStyle = '#000000';  
             ctx.font = 'bold 26px Arial';  
             ctx.textAlign = 'left';  
             ctx.textBaseline = 'middle';  
-            ctx.fillText(number, 165, 1154);  
+            ctx.fillText(number, 165, 1154 + 200);  
         }  
     }  
 
@@ -406,7 +406,7 @@
             });  
               
             croppedImageObj = new Image();  
-            croppedImageObj.src = canvasCropped.toDataURL();  
+            croppedImageObj.src = canvasCropped.dataURL();  
             croppedImageObj.onload = function() {  
                 updatePoster();  
                 closeCropModal();  
