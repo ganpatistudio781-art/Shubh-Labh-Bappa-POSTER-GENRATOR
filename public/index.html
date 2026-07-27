@@ -5,61 +5,97 @@
 
 <meta charset="UTF-8">
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
 <title>Poster Generator</title>
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.css">
+<link rel="stylesheet"
+href="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.css">
 
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet"
+href="style.css">
 
 </head>
 
 <body>
 
-<div class="container">
+<div class="app">
 
-<header>
+<header class="topBar">
 
 <h1>Poster Generator</h1>
 
-<p>Create Beautiful Posters in Seconds</p>
+<p>Create Beautiful Posters Instantly</p>
 
 </header>
 
+<main>
+
 <section class="previewCard">
 
-<div class="posterBox">
+<div class="posterPreview">
 
-<canvas id="posterCanvas" width="1080" height="1350"></canvas>
+<canvas
+id="posterCanvas"
+width="1080"
+height="1350">
+</canvas>
 
 </div>
 
 </section>
 
-<section class="formCard">
+<section class="editorCard">
 
 <h2>Poster Details</h2>
 
-<label>Name</label>
+<div class="inputGroup">
+
+<label>
+
+Your Name
+
+</label>
 
 <input
 type="text"
-id="name"
-placeholder="Enter Name"
+id="nameInput"
+placeholder="Enter your name"
 maxlength="30">
 
-<label>Mobile Number</label>
+</div>
+
+<div class="inputGroup">
+
+<label>
+
+Mobile Number
+
+</label>
 
 <input
 type="tel"
-id="mobile"
-placeholder="Enter Mobile Number"
+id="mobileInput"
+placeholder="Enter mobile number"
 maxlength="10">
-<label>Upload Photo</label>
 
-<button id="uploadPhotoBtn" class="primaryBtn">
+</div>
+<div class="inputGroup">
+
+<label>
+
+Upload Photo
+
+</label>
+
+<button
+type="button"
+id="uploadBtn"
+class="primaryBtn">
+
 📷 Upload Photo
+
 </button>
 
 <input
@@ -68,29 +104,14 @@ id="photoInput"
 accept="image/*"
 hidden>
 
-<div id="photoOptions" class="bottomSheet">
-
-<div class="sheetBox">
-
-<h3>Select Photo</h3>
-
-<button id="cameraBtn" class="sheetBtn">
-📷 Camera
-</button>
-
-<button id="galleryBtn" class="sheetBtn">
-🖼 Gallery
-</button>
-
-<button id="closeSheetBtn" class="sheetBtn cancel">
-❌ Cancel
-</button>
-
 </div>
 
-</div>
+<div class="buttonGroup">
 
-<button id="generateBtn" class="primaryBtn">
+<button
+type="button"
+id="generateBtn"
+class="generateBtn">
 
 ✨ Generate Poster
 
@@ -105,30 +126,87 @@ download="Poster.png">
 
 </a>
 
+</div>
+
 </section>
+
+</main>
+
+
+<!-- Camera / Gallery Bottom Sheet -->
+
+<div
+id="photoSheet"
+class="photoSheet">
+
+<div class="sheetContent">
+
+<h3>
+
+Select Photo
+
+</h3>
+
+<button
+id="cameraBtn"
+class="sheetBtn">
+
+📷 Camera
+
+</button>
+
+<button
+id="galleryBtn"
+class="sheetBtn">
+
+🖼 Gallery
+
+</button>
+
+<button
+id="closeSheetBtn"
+class="cancelSheetBtn">
+
+Cancel
+
+</button>
+
+</div>
+
+</div>
 <!-- Crop Editor -->
 
 <div id="cropModal" class="cropModal">
 
-    <div class="cropCard">
+    <div class="cropContainer">
 
-        <h2>Adjust Photo</h2>
+        <div class="cropHeader">
 
-        <img id="cropImage">
-
-        <div class="toolBar">
-
-            <button id="zoomInBtn">➕</button>
-
-            <button id="zoomOutBtn">➖</button>
-
-            <button id="rotateLeftBtn">↺</button>
-
-            <button id="rotateRightBtn">↻</button>
+            <h2>Adjust Photo</h2>
 
         </div>
 
-        <div class="actionBar">
+        <div class="cropBody">
+
+            <img id="cropImage" alt="Crop Image">
+
+        </div>
+
+        <div class="cropTools">
+
+            <button id="zoomInBtn" class="toolBtn">+</button>
+
+            <button id="zoomOutBtn" class="toolBtn">−</button>
+
+            <button id="rotateLeftBtn" class="toolBtn">↺</button>
+
+            <button id="rotateRightBtn" class="toolBtn">↻</button>
+
+            <button id="resetBtn" class="toolBtn">Reset</button>
+
+        </div>
+
+        <div class="cropActions">
 
             <button id="cancelCropBtn" class="cancelBtn">
 
@@ -148,20 +226,34 @@ download="Poster.png">
 
 </div>
 
+
+<!-- Loading -->
+
+<div id="loader" class="loader">
+
+    <div class="loaderBox">
+
+        <div class="spinner"></div>
+
+        <p>Generating Poster...</p>
+
+    </div>
+
+</div>
+
+
 <footer>
 
-<a
-href="https://youtube.com/@YOURCHANNEL"
-target="_blank"
-class="youtubeBtn">
+<p>
 
-📺 Visit Our YouTube Channel
+Poster Generator
 
-</a>
+</p>
 
 </footer>
 
 </div>
+
 
 <script src="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.js"></script>
 
