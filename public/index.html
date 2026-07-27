@@ -315,11 +315,14 @@
             ctx.fillText("Please place poster-template.png in folder", canvas.width / 2, canvas.height / 2);  
         }  
 
-        // Photo: Left 20px bada (113 - 20 = 93), Top 20px upar + upar/neeche 30px bada ((1083 - 20) - 30 = 1033), Width 40px bada (159 + 40 = 199), Height 60px bada (178 + 60 = 238)
-        let boxX = 93;   
-        let boxY = 1033;  
-        let boxWidth = (272 - 113) + 40;   // 199
-        let boxHeight = (1061 - 883) + 60; // 238  
+        // Photo: Original center/box ke hisab se, har side se 30-30 pixel bada kiya gaya hai
+        let originalCenterX = (113 + 272) / 2; // Center X point
+        let originalCenterY = (883 + 1061) / 2; // Center Y point
+        
+        let boxWidth = (272 - 113) + 60;   // Original width + 30px left + 30px right
+        let boxHeight = (1061 - 883) + 60; // Original height + 30px top + 30px bottom
+        let boxX = originalCenterX - (boxWidth / 2);   
+        let boxY = originalCenterY - (boxHeight / 2);  
 
         if (croppedImageObj) {  
             ctx.drawImage(croppedImageObj, boxX, boxY, boxWidth, boxHeight);  
@@ -328,22 +331,22 @@
         const name = document.getElementById('userName').value;  
         const number = document.getElementById('userNumber').value;  
 
-        // Name: 5 pixel upar kiya (1290 - 5 = 1285)
+        // Name: 8 pixel upar (1285 - 8 = 1277) aur size 4 badha diya (32 + 4 = 36px)
         if (name) {  
             ctx.fillStyle = '#000000';  
-            ctx.font = 'bold 32px Arial';  
+            ctx.font = 'bold 36px Arial';  
             ctx.textAlign = 'left';  
             ctx.textBaseline = 'middle';  
-            ctx.fillText(name, 165, 1285);  
+            ctx.fillText(name, 165, 1277);  
         }  
 
-        // Mobile Number: 2 pixel upar kiya (1351 - 2 = 1349)
+        // Mobile Number: 3 pixel upar (1349 - 3 = 1346) aur size 4 badha diya (32 + 4 = 36px)
         if (number) {  
             ctx.fillStyle = '#000000';  
-            ctx.font = 'bold 32px Arial';  
+            ctx.font = 'bold 36px Arial';  
             ctx.textAlign = 'left';  
             ctx.textBaseline = 'middle';  
-            ctx.fillText(number, 165, 1349);  
+            ctx.fillText(number, 165, 1346);  
         }  
     }  
 
@@ -375,7 +378,7 @@
                 }  
                 const image = document.getElementById('imageToCrop');  
                 cropper = new Cropper(image, {  
-                    aspectRatio: ((272 - 113) + 40) / ((1061 - 883) + 60),  
+                    aspectRatio: ((272 - 113) + 60) / ((1061 - 883) + 60),  
                     viewMode: 1,  
                     autoCropArea: 1,  
                 });  
@@ -401,7 +404,7 @@
     function cropAndSaveImage() {  
         if (cropper) {  
             const canvasCropped = cropper.getCroppedCanvas({  
-                width: (272 - 113) + 40,  
+                width: (272 - 113) + 60,  
                 height: (1061 - 883) + 60  
             });  
               
