@@ -1,131 +1,105 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Shubh Labh Poster Studio</title>
-    <!-- Google Fonts & FontAwesome Icons -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- CropperJS CSS -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Poster Generator</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; background: #f4f4f9; padding: 20px; }
+        .container { max-width: 500px; margin: 0 auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .preview-box { margin-bottom: 20px; }
+        .preview-box img { max-width: 100%; height: auto; border-radius: 8px; border: 1px solid #ddd; }
+        input, button { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+        button { background: #ff6600; color: white; font-weight: bold; border: none; cursor: pointer; }
+        button:hover { background: #e05500; }
+    </style>
 </head>
 <body>
 
-    <main class="app-container">
+<div class="container">
+    <h2>Poster Generator</h2>
+
+    <!-- Preview Section -->
+    <div class="preview-box">
+        <img id="posterPreview" src="/poster-template.png" alt="Poster Template Loading...">
+    </div>
+
+    <!-- Form Section -->
+    <form id="posterForm">
+        <input type="text" id="nameInput" placeholder="Apna Naam Likhein" required>
+        <input type="tel" id="mobileInput" placeholder="Mobile Number Likhein" required>
+        <input type="file" id="photoInput" accept="image/*">
         
-        <!-- Header Banner -->
-        <header class="header-card">
-            <h1>Shubh Labh Poster Studio</h1>
-            <p>Create Your Poster</p>
-            <a href="https://youtube.com/@ganpati_shubhlabh23?si=BSfYGSNcZTXVtLz-" target="_blank" class="yt-button">
-                <span class="pulse-dot"></span>
-                <i class="fa-brands fa-youtube"></i> Visit YouTube Channel
-            </a>
-        </header>
+        <button type="submit" id="generateBtn">Generate & Download Poster</button>
+    </form>
+</div>
 
-        <!-- Section Title -->
-        <h2 class="section-title">Live Preview</h2>
+<script>
+    // Configuration object for layout alignment
+    const posterConfig = {
+        templateWidth: 1080,
+        templateHeight: 1350,
+        nameX: 145,
+        nameY: 1192,
+        fontSizeName: 32,
+        fontColorName: '#000000',
+        mobileX: 180,
+        mobileY: 1266,
+        fontSizeMobile: 28,
+        fontColorMobile: '#000000',
+        photoX: 56,
+        photoY: 746,
+        photoWidth: 348,
+        photoHeight: 382
+    };
 
-        <!-- Live Poster Preview -->
-        <div class="preview-card">
-            <div class="preview-container" id="preview-container">
-                <div class="preview-wrapper" id="preview-wrapper">
-                    <!-- Base Poster Template -->
-                    <img src="poster-template.png" alt="Poster Template" id="template-img" class="template-img" crossorigin="anonymous">
-                    
-                    <!-- Overlaid Photo -->
-                    <img id="preview-photo" class="preview-photo" style="display: none;">
-                    
-                    <!-- Overlaid Realtime Text -->
-                    <div id="preview-name" class="preview-text"></div>
-                    <div id="preview-mobile" class="preview-text"></div>
-                </div>
-            </div>
-        </div>
+    document.getElementById('posterForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const btn = document.getElementById('generateBtn');
+        btn.innerText = 'Generating Poster...';
+        btn.disabled = true;
 
-        <!-- Inputs Card -->
-        <section class="form-card">
-            <h3 class="form-title">Poster Details</h3>
+        const formData = new FormData();
+        formData.append('name', document.getElementById('nameInput').value);
+        formData.append('mobile', document.getElementById('mobileInput').value);
+        formData.append('config', JSON.stringify(posterConfig));
 
-            <div class="form-group">
-                <label for="nameInput">Full Name</label>
-                <div class="input-wrapper">
-                    <i class="fa-solid fa-user"></i>
-                    <input type="text" id="nameInput" placeholder="Enter your name" autocomplete="off">
-                </div>
-            </div>
+        const photoFile = document.getElementById('photoInput').files[0];
+        if (photoFile) {
+            formData.append('image', photoFile);
+        }
 
-            <div class="form-group">
-                <label for="mobileInput">Mobile Number</label>
-                <div class="input-wrapper">
-                    <i class="fa-solid fa-phone"></i>
-                    <input type="tel" id="mobileInput" placeholder="Enter mobile number" maxlength="15" autocomplete="off">
-                </div>
-            </div>
+        try {
+            // RELATIVE PATH: Works on localhost AND Vercel
+            const response = await fetch('/api/generate', {
+                method: 'POST',
+                body: formData
+            });
 
-            <button class="btn btn-secondary" id="btn-upload">
-                <i class="fa-solid fa-camera"></i> Upload Photo
-            </button>
+            if (!response.ok) {
+                throw new Error('Generation failed on server');
+            }
+
+            const blob = await response.blob();
+            const downloadUrl = URL.createObjectURL(blob);
             
-            <button class="btn btn-primary" id="btn-generate">
-                <i class="fa-solid fa-download"></i> Generate Poster
-            </button>
-        </section>
+            const a = document.createElement('a');
+            a.href = downloadUrl;
+            a.download = `${document.getElementById('nameInput').value || 'Poster'}_Generated.png`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
 
-    </main>
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Failed to generate poster. Please try again.');
+        } finally {
+            btn.innerText = 'Generate & Download Poster';
+            btn.disabled = false;
+        }
+    });
+</script>
 
-    <!-- Mobile Bottom Sheet for Image Selection -->
-    <div class="bottom-sheet-overlay" id="sheet-overlay"></div>
-    <div class="bottom-sheet" id="bottom-sheet">
-        <div class="sheet-header">
-            <div class="sheet-drag-handle"></div>
-            <h3>Select Image Source</h3>
-        </div>
-        <div class="sheet-options">
-            <label class="sheet-option">
-                <i class="fa-solid fa-camera text-orange"></i>
-                <span>Take Photo (Camera)</span>
-                <input type="file" accept="image/*" capture="user" id="cameraInput" hidden>
-            </label>
-            <label class="sheet-option">
-                <i class="fa-solid fa-images text-orange"></i>
-                <span>Choose from Gallery</span>
-                <input type="file" accept="image/*" id="galleryInput" hidden>
-            </label>
-            <div class="sheet-option text-danger" id="btn-cancel-sheet">
-                <i class="fa-solid fa-xmark"></i>
-                <span>Cancel</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- Full Screen Crop Page -->
-    <div class="crop-page" id="crop-page">
-        <div class="crop-header">
-            <button id="btn-crop-cancel"><i class="fa-solid fa-arrow-left"></i></button>
-            <h2>Adjust & Crop Photo</h2>
-            <button id="btn-crop-done" class="btn-done"><i class="fa-solid fa-check"></i> Done</button>
-        </div>
-        <div class="crop-container">
-            <img id="crop-image" src="" alt="Crop Area">
-        </div>
-        <div class="crop-tools">
-            <button class="tool-btn" id="btn-rotate-left" title="Rotate Left"><i class="fa-solid fa-rotate-left"></i></button>
-            <button class="tool-btn" id="btn-rotate-right" title="Rotate Right"><i class="fa-solid fa-rotate-right"></i></button>
-            <button class="tool-btn" id="btn-flip-x" title="Flip Mirror"><i class="fa-solid fa-right-left"></i></button>
-        </div>
-    </div>
-
-    <!-- Loading Screen -->
-    <div class="loading-overlay" id="loading-overlay">
-        <div class="spinner"></div>
-        <p>Generating HD Poster...</p>
-    </div>
-
-    <!-- CropperJS Script -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
-    <script src="script.js"></script>
 </body>
 </html>
