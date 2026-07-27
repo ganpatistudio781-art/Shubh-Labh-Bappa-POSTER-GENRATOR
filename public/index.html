@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shubh Labh Bappa - Poster Generator</title>
+    <!-- Cropper.js CSS for Crop Popup -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
     <style>
         * {
             box-sizing: border-box;
@@ -29,7 +31,6 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             text-align: center;
         }
-        /* 1. Channel Name */
         .channel-title {
             font-size: 26px;
             font-weight: bold;
@@ -38,7 +39,6 @@
             text-transform: uppercase;
             letter-spacing: 1px;
         }
-        /* 2. YouTube Channel Link */
         .channel-link {
             display: inline-block;
             margin-bottom: 20px;
@@ -49,12 +49,10 @@
             text-decoration: none;
             font-size: 14px;
             font-weight: 600;
-            transition: background 0.3s;
         }
         .channel-link:hover {
             background-color: #cc0000;
         }
-        /* 3. Poster Preview / Container */
         .poster-section {
             margin-bottom: 20px;
         }
@@ -66,25 +64,21 @@
         }
         .poster-preview {
             width: 100%;
-            height: 350px;
             background: #f0f0f0;
             border: 2px dashed #ccc;
             border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             overflow: hidden;
             position: relative;
-            background-size: cover;
-            background-position: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         #posterCanvas {
             width: 100%;
-            height: 100%;
-            object-fit: contain;
+            height: auto;
+            display: block;
             border-radius: 8px;
         }
-        /* 4. Form Inputs & Button */
         .form-group {
             margin-bottom: 15px;
             text-align: left;
@@ -103,16 +97,9 @@
             border-radius: 6px;
             font-size: 14px;
             outline: none;
-            transition: border-color 0.3s;
         }
         .form-control:focus {
             border-color: #ff5722;
-        }
-        .file-input-wrapper {
-            position: relative;
-            overflow: hidden;
-            display: inline-block;
-            width: 100%;
         }
         .btn {
             width: 100%;
@@ -124,11 +111,44 @@
             font-size: 16px;
             font-weight: bold;
             cursor: pointer;
-            transition: background 0.3s;
             margin-top: 5px;
         }
         .btn:hover {
             background-color: #218838;
+        }
+
+        /* Crop Modal Styling */
+        #cropModal {
+            display: none;
+            position: fixed;
+            z-index: 999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding: 20px;
+        }
+        .crop-container {
+            max-width: 100%;
+            max-height: 70vh;
+            background: #fff;
+            padding: 10px;
+            border-radius: 8px;
+        }
+        .crop-container img {
+            max-width: 100%;
+            display: block;
+        }
+        .crop-btn-group {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            max-width: 300px;
         }
     </style>
 </head>
@@ -146,124 +166,165 @@
         <!-- 3. Poster Preview Section -->
         <div class="poster-section">
             <div class="section-title">Preview Poster</div>
-            <div class="poster-preview" id="previewBox">
-                <canvas id="posterCanvas" style="display:none;"></canvas>
-                <span id="placeholderText" style="color: #888; font-size: 14px;">Poster yahan dikhega</span>
+            <div class="poster-preview">
+                <canvas id="posterCanvas"></canvas>
             </div>
         </div>
 
         <!-- 4. Inputs: Name, Number, Photo Upload & Generate Button -->
         <div class="form-group">
             <label for="userName">Apna Naam:</label>
-            <input type="text" id="userName" class="form-control" placeholder="Apna naam yahan likhein">
+            <input type="text" id="userName" class="form-control" placeholder="Apna naam yahan likhein" oninput="updatePoster()">
         </div>
 
         <div class="form-group">
             <label for="userNumber">Mobile Number:</label>
-            <input type="tel" id="userNumber" class="form-control" placeholder="Apna mobile number likhein">
+            <input type="tel" id="userNumber" class="form-control" placeholder="Apna mobile number likhein" oninput="updatePoster()">
         </div>
 
         <div class="form-group">
-            <label for="userPhoto">Photo Upload Karein:</label>
-            <input type="file" id="userPhoto" class="form-control" accept="image/*">
+            <label for="userPhoto">Photo Upload (Camera / Gallery):</label>
+            <!-- accept="image/*" mobile me camera aur gallery dono open karne deta hai -->
+            <input type="file" id="userPhoto" class="form-control" accept="image/*" onchange="openCropModal(event)">
         </div>
 
-        <button class="btn" onclick="generatePoster()">Generate Poster</button>
+        <button class="btn" onclick="downloadPoster()">Download / Generate Poster</button>
     </div>
 
+    <!-- Crop Popup Modal -->
+    <div id="cropModal">
+        <div class="crop-container">
+            <img id="imageToCrop" src="">
+        </div>
+        <div class="crop-btn-group">
+            <button class="btn" style="background-color: #dc3545;" onclick="closeCropModal()">Cancel</button>
+            <button class="btn" onclick="cropAndSaveImage()">Crop & Save</button>
+        </div>
+    </div>
+
+    <!-- Cropper.js JS Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
     <script>
-        function generatePoster() {
-            const name = document.getElementById('userName').value;
-            const number = document.getElementById('userNumber').value;
-            const photoInput = document.getElementById('userPhoto');
-            const canvas = document.getElementById('posterCanvas');
-            const placeholder = document.getElementById('placeholderText');
-            
-            if (!name) {
-                alert('Kripya apna naam darj karein!');
-                return;
+        let templateImg = new Image();
+        templateImg.src = 'poster-template.png'; // Aapki template image ka path
+        let croppedImageObj = null;
+        let cropper = null;
+
+        const canvas = document.getElementById('posterCanvas');
+        const ctx = canvas.getContext('2d');
+
+        templateImg.onload = function() {
+            canvas.width = templateImg.naturalWidth || 800;
+            canvas.height = templateImg.naturalHeight || 1000;
+            updatePoster();
+        };
+
+        function updatePoster() {
+            if (!templateImg.complete) return;
+
+            // Clear canvas & draw template background
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(templateImg, 0, 0, canvas.width, canvas.height);
+
+            // Draw Cropped User Photo if available (Coordinates ko apne template ke hisaab se adjust kar sakte hain)
+            if (croppedImageObj) {
+                ctx.save();
+                ctx.beginPath();
+                // Circle ya Rectangle photo frame (Yahan circle example ke liye diya hai)
+                let centerX = canvas.width / 2;
+                let centerY = 300;
+                let radius = 120;
+                
+                ctx.arc(centerX, centerY, radius, 0, Math.PI * 2, true);
+                ctx.closePath();
+                ctx.clip();
+                ctx.drawImage(croppedImageObj, centerX - radius, centerY - radius, radius * 2, radius * 2);
+                ctx.restore();
+
+                // Photo border
+                ctx.strokeStyle = '#ff9933';
+                ctx.lineWidth = 6;
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, radius, 0, Math.PI * 2, true);
+                ctx.stroke();
             }
 
-            canvas.style.display = 'block';
-            placeholder.style.display = 'none';
+            // Get user inputs
+            const name = document.getElementById('userName').value;
+            const number = document.getElementById('userNumber').value;
 
-            const ctx = canvas.getContext('2d');
-            // Canvas standard resolution
-            canvas.width = 600;
-            canvas.height = 750;
+            // Draw User Name
+            if (name) {
+                ctx.fillStyle = '#000000';
+                ctx.font = 'bold 36px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText(name, canvas.width / 2, 480);
+            }
 
-            // Background Design (Gradient)
-            let gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-            gradient.addColorStop(0, '#ff9933');
-            gradient.addColorStop(0.5, '#ffcc00');
-            gradient.addColorStop(1, '#ff5722');
-            ctx.fillStyle = gradient;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            // Header text inside poster
-            ctx.fillStyle = '#ffffff';
-            ctx.font = 'bold 30px Arial';
-            ctx.textAlign = 'center';
-            ctx.fillText('SHUBH LABH BAPPA', canvas.width / 2, 50);
-
-            // Draw Photo if uploaded
-            if (photoInput.files && photoInput.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const img = new Image();
-                    img.onload = function() {
-                        // Draw circular or rectangular user photo frame
-                        ctx.save();
-                        ctx.beginPath();
-                        ctx.arc(canvas.width / 2, 220, 90, 0, Math.PI * 2, true);
-                        ctx.closePath();
-                        ctx.clip();
-                        ctx.drawImage(img, canvas.width / 2 - 90, 130, 180, 180);
-                        ctx.restore();
-
-                        // Border around photo
-                        ctx.strokeStyle = '#ffffff';
-                        ctx.lineWidth = 5;
-                        ctx.beginPath();
-                        ctx.arc(canvas.width / 2, 220, 90, 0, Math.PI * 2, true);
-                        ctx.stroke();
-
-                        drawDetails(ctx, name, number, canvas);
-                    }
-                    img.src = e.target.result;
-                }
-                reader.readAsDataURL(photoInput.files[0]);
-            } else {
-                // Default placeholder circle if no photo
-                ctx.fillStyle = '#fff';
-                ctx.beginPath();
-                ctx.arc(canvas.width / 2, 220, 90, 0, Math.PI * 2, true);
-                ctx.fill();
-                
-                ctx.fillStyle = '#333';
-                ctx.font = '16px Arial';
-                ctx.fillText('No Photo', canvas.width / 2, 225);
-
-                drawDetails(ctx, name, number, canvas);
+            // Draw User Mobile Number
+            if (number) {
+                ctx.fillStyle = '#333333';
+                ctx.font = '28px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('Mob: ' + number, canvas.width / 2, 530);
             }
         }
 
-        function drawDetails(ctx, name, number, canvas) {
-            // Name
-            ctx.fillStyle = '#000000';
-            ctx.font = 'bold 28px Arial';
-            ctx.fillText(name, canvas.width / 2, 360);
-
-            // Number
-            if(number) {
-                ctx.font = '20px Arial';
-                ctx.fillText('Mob: ' + number, canvas.width / 2, 400);
+        // Open Crop Popup when image is selected
+        function openCropModal(event) {
+            const files = event.target.files;
+            if (files && files.length > 0) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('imageToCrop').src = e.target.result;
+                    document.getElementById('cropModal').style.display = 'flex';
+                    
+                    if (cropper) {
+                        cropper.destroy();
+                    }
+                    const image = document.getElementById('imageToCrop');
+                    cropper = new Cropper(image, {
+                        aspectRatio: 1, // Square crop for profile photo
+                        viewMode: 1,
+                    });
+                };
+                reader.readAsDataURL(files[0]);
             }
+        }
 
-            // Footer / Channel Branding inside poster
-            ctx.fillStyle = '#ffffff';
-            ctx.font = 'italic 18px Arial';
-            ctx.fillText('Blessed by Shubh Labh Bappa', canvas.width / 2, canvas.height - 40);
+        // Close Crop Modal
+        function closeCropModal() {
+            document.getElementById('cropModal').style.display = 'none';
+            document.getElementById('userPhoto').value = '';
+            if (cropper) {
+                cropper.destroy();
+            }
+        }
+
+        // Crop and Save Image to Canvas
+        function cropAndSaveImage() {
+            if (cropper) {
+                const canvasCropped = cropper.croppedCanvas || cropper.getCroppedCanvas({
+                    width: 400,
+                    height: 400
+                });
+                
+                croppedImageObj = new Image();
+                croppedImageObj.src = canvasCropped.toDataURL();
+                croppedImageObj.onload = function() {
+                    updatePoster();
+                    document.getElementById('cropModal').style.display = 'none';
+                    cropper.destroy();
+                }
+            }
+        }
+
+        // Download Final Poster
+        function downloadPoster() {
+            const link = document.createElement('a');
+            link.download = 'shubh-labh-bappa-poster.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
         }
     </script>
 </body>
