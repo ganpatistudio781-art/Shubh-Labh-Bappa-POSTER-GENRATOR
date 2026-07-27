@@ -10,7 +10,9 @@ const port = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
+
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(process.cwd(), 'public')));
 
 const upload = multer({ storage: multer.memoryStorage() });
 
@@ -19,7 +21,6 @@ app.post('/api/generate', upload.single('image'), async (req, res) => {
         const { name, mobile, config: configString } = req.body;
         const config = JSON.parse(configString || '{}');
         
-        // Multiple fallback paths for Vercel Serverless environment
         const possiblePaths = [
             path.join(__dirname, 'public', 'poster-template.png'),
             path.join(process.cwd(), 'public', 'poster-template.png'),
@@ -29,20 +30,18 @@ app.post('/api/generate', upload.single('image'), async (req, res) => {
         let templatePath = possiblePaths.find(p => fs.existsSync(p));
 
         if (!templatePath) {
-            console.error('Template image not found in any path:', possiblePaths);
-            return res.status(500).json({ error: 'Template file poster-template.png is missing on server.' });
+            console.error('Template image not found in paths:', possiblePaths);
+            return res.status(500).json({ error: 'poster-template.png is missing on server.' });
         }
 
-        // 1. Process uploaded photo
         let photoBuffer = null;
-        if (req.file) {
+        if (req.file && req.file.buffer) {
             photoBuffer = await sharp(req.file.buffer)
                 .resize(config.photoWidth || 348, config.photoHeight || 382, { fit: 'cover' })
                 .png()
                 .toBuffer();
         }
 
-        // 2. Format SVG text safely
         const safeName = (name || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
         const safeMobile = (mobile || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
@@ -51,13 +50,13 @@ app.post('/api/generate', upload.single('image'), async (req, res) => {
                 <style>
                     .nameText {
                         font-family: 'Arial', sans-serif;
-                        font-size: ${config.fontSizeName || 28}px;
+                        font-size: ${config.fontSizeName || 32}px;
                         font-weight: bold;
                         fill: ${config.fontColorName || '#000000'};
                     }
                     .mobileText {
                         font-family: 'Arial', sans-serif;
-                        font-size: ${config.fontSizeMobile || 26}px;
+                        font-size: ${config.fontSizeMobile || 28}px;
                         font-weight: bold;
                         fill: ${config.fontColorMobile || '#000000'};
                     }
@@ -67,7 +66,6 @@ app.post('/api/generate', upload.single('image'), async (req, res) => {
             </svg>
         `;
 
-        // 3. Build composition
         const compositeLayers = [];
         
         if (photoBuffer) {
@@ -84,13 +82,11 @@ app.post('/api/generate', upload.single('image'), async (req, res) => {
             left: 0
         });
 
-        // 4. Sharp final render
         const outputBuffer = await sharp(templatePath)
             .composite(compositeLayers)
             .png({ quality: 100 })
             .toBuffer();
 
-        // 5. Send HD PNG output to client
         res.setHeader('Content-Type', 'image/png');
         res.setHeader('Content-Disposition', `attachment; filename="${name ? name.replace(/\s+/g, '_') : 'Poster'}_Generated.png"`);
         res.send(outputBuffer);
