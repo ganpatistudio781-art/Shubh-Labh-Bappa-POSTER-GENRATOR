@@ -315,11 +315,11 @@
             ctx.fillText("Please place poster-template.png in folder", canvas.width / 2, canvas.height / 2);  
         }  
 
-        // Photo Box: Bada Size kiya gaya hai (X: 95, Y: 865, Width: 230, Height: 230)
-        let boxX = 95;   
-        let boxY = 865;  
-        let boxWidth = 230;   
-        let boxHeight = 230;  
+        // Photo Coordinates provided: 113,883 to 272,1061
+        let boxX = 113;   
+        let boxY = 883;  
+        let boxWidth = 272 - 113;   // 159
+        let boxHeight = 1061 - 883; // 178  
 
         if (croppedImageObj) {  
             ctx.drawImage(croppedImageObj, boxX, boxY, boxWidth, boxHeight);  
@@ -328,22 +328,22 @@
         const name = document.getElementById('userName').value;  
         const number = document.getElementById('userNumber').value;  
 
-        // Name Coordinates: 75px aur neeche kiya gaya (Y: 1185) aur font bada (34px)
+        // Name Coordinates provided: 165,1110 to 297,1110
         if (name) {  
             ctx.fillStyle = '#000000';  
-            ctx.font = 'bold 34px Arial';  
+            ctx.font = 'bold 26px Arial';  
             ctx.textAlign = 'left';  
             ctx.textBaseline = 'middle';  
-            ctx.fillText(name, 165, 1185);  
+            ctx.fillText(name, 165, 1110);  
         }  
 
-        // Mobile Number Coordinates: 75px aur neeche kiya gaya (Y: 1235) aur font bada (34px)
+        // Mobile Number Coordinates provided: 165,1154 to 297,1154
         if (number) {  
             ctx.fillStyle = '#000000';  
-            ctx.font = 'bold 34px Arial';  
+            ctx.font = 'bold 26px Arial';  
             ctx.textAlign = 'left';  
             ctx.textBaseline = 'middle';  
-            ctx.fillText(number, 165, 1235);  
+            ctx.fillText(number, 165, 1154);  
         }  
     }  
 
@@ -375,7 +375,7 @@
                 }  
                 const image = document.getElementById('imageToCrop');  
                 cropper = new Cropper(image, {  
-                    aspectRatio: 230 / 230,  
+                    aspectRatio: (272 - 113) / (1061 - 883),  
                     viewMode: 1,  
                     autoCropArea: 1,  
                 });  
@@ -401,8 +401,8 @@
     function cropAndSaveImage() {  
         if (cropper) {  
             const canvasCropped = cropper.getCroppedCanvas({  
-                width: 230,  
-                height: 230  
+                width: 272 - 113,  
+                height: 1061 - 883  
             });  
               
             croppedImageObj = new Image();  
