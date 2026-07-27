@@ -24,7 +24,7 @@
         }  
         .container {  
             width: 100%;  
-            max-width: 45px;  
+            max-width: 450px;  
             background: #ffffff;  
             padding: 20px;  
             border-radius: 12px;  
@@ -315,14 +315,12 @@
             ctx.fillText("Please place poster-template.png in folder", canvas.width / 2, canvas.height / 2);  
         }  
 
-        // Photo: Left position ko 35 pixel aur peeche (aur bada) kiya (78 - 35 = 43)
-        // Upar ki position ko 15 pixel aur upar kiya (868 - 15 = 853)
-        // Width: Original width + Left 35px + Right 35px = 159 + 70 = 229
-        // Height: Original height + Top 15px + Bottom 20px = 178 + 35 = 213
-        let boxX = 43;   
+        // Photo: Pichle X (43) se 10 pixel right shift (43 + 10 = 53)
+        // Rectangle shape: width aur height ko proper clean rectangle aspect ratio me set kiya hai
+        let boxX = 53;   
         let boxY = 853;  
-        let boxWidth = (272 - 113) + 35 + 35;   
-        let boxHeight = (1061 - 883) + 15 + 20;  
+        let boxWidth = 220;   
+        let boxHeight = 270;  
 
         if (croppedImageObj) {  
             ctx.drawImage(croppedImageObj, boxX, boxY, boxWidth, boxHeight);  
@@ -331,7 +329,7 @@
         const name = document.getElementById('userName').value;  
         const number = document.getElementById('userNumber').value;  
 
-        // Name: Perfect position (1260)
+        // Name: Fixed Position
         if (name) {  
             ctx.fillStyle = '#000000';  
             ctx.font = 'bold 36px Arial';  
@@ -340,7 +338,7 @@
             ctx.fillText(name, 169, 1260);  
         }  
 
-        // Mobile Number: Perfect position (1341)
+        // Mobile Number: Fixed Position
         if (number) {  
             ctx.fillStyle = '#000000';  
             ctx.font = 'bold 36px Arial';  
@@ -378,7 +376,7 @@
                 }  
                 const image = document.getElementById('imageToCrop');  
                 cropper = new Cropper(image, {  
-                    aspectRatio: ((272 - 113) + 35 + 35) / ((1061 - 883) + 15 + 20),  
+                    aspectRatio: 220 / 270,  // Rectangle aspect ratio matching boxWidth / boxHeight
                     viewMode: 1,  
                     autoCropArea: 1,  
                 });  
@@ -404,8 +402,8 @@
     function cropAndSaveImage() {  
         if (cropper) {  
             const canvasCropped = cropper.getCroppedCanvas({  
-                width: (272 - 113) + 35 + 35,  
-                height: (1061 - 883) + 15 + 20  
+                width: 220,  
+                height: 270  
             });  
               
             croppedImageObj = new Image();  
