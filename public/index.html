@@ -1,276 +1,164 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Poster Generator Studio</title>
-    <!-- Cropper.js CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css"/>
-    <style>
-        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background: #f0f2f5; margin: 0; padding: 15px; display: flex; justify-content: center; }
-        .container { width: 100%; max-width: 480px; background: #fff; padding: 20px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
-        h2 { text-align: center; color: #1a1a1a; margin-top: 0; margin-bottom: 20px; font-size: 22px; }
-        
-        .preview-box { width: 100%; background: #f8f9fa; border: 2px dashed #ccc; border-radius: 12px; padding: 10px; text-align: center; margin-bottom: 20px; min-height: 200px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-        .preview-box img { max-width: 100%; max-height: 350px; border-radius: 8px; object-fit: contain; }
-        
-        .form-group { margin-bottom: 15px; text-align: left; }
-        label { font-weight: 600; font-size: 14px; color: #444; display: block; margin-bottom: 6px; }
-        input[type="text"], input[type="tel"] { width: 100%; padding: 12px 15px; border: 1px solid #ddd; border-radius: 8px; font-size: 15px; background: #fafafa; outline: none; }
-        input[type="text"]:focus, input[type="tel"]:focus { border-color: #e65100; background: #fff; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Poster Generator with Crop Modal</title>
+  
+  <!-- 1. Cropper.js CSS (Popup me Crop/Zoom/Rotate ke liye) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css"/>
+  
+  <style>
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; background: #f4f7f6; padding: 20px; }
+    
+    /* Upload Button */
+    .upload-btn { background: #2563eb; color: white; padding: 14px 28px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 16px; display: inline-block; margin-bottom: 20px; }
+    .upload-btn:hover { background: #1d4ed8; }
+    
+    /* Popup / Modal Window Styling */
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1000; justify-content: center; align-items: center; }
+    .modal-content { background: #ffffff; padding: 20px; border-radius: 12px; max-width: 450px; width: 90%; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
+    .img-container { max-height: 320px; width: 100%; overflow: hidden; margin-bottom: 15px; background: #000; border-radius: 8px; }
+    
+    /* Control Buttons Inside Modal */
+    .controls { display: flex; gap: 8px; justify-content: center; margin-bottom: 15px; flex-wrap: wrap; }
+    .btn { padding: 8px 14px; border: none; background: #374151; color: white; border-radius: 6px; cursor: pointer; font-size: 14px; }
+    .btn:hover { background: #1f2937; }
+    .btn-success { background: #16a34a; font-weight: bold; width: 100%; padding: 12px; margin-top: 5px; }
+    .btn-success:hover { background: #15803d; }
 
-        /* Upload Option Buttons */
-        .upload-options { display: flex; gap: 10px; margin-top: 5px; }
-        .btn-upload { flex: 1; padding: 12px; border: 1px solid #e65100; background: #fff3e0; color: #e65100; font-weight: bold; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 14px; transition: 0.2s; }
-        .btn-upload:hover { background: #ffe0b2; }
-
-        .photo-status { margin-top: 8px; font-size: 13px; color: #2e7d32; font-weight: 600; display: none; text-align: center; background: #e8f5e9; padding: 8px; border-radius: 6px; }
-
-        .btn-submit { width: 100%; padding: 14px; margin-top: 20px; background: #e65100; color: white; font-weight: bold; font-size: 16px; border: none; border-radius: 8px; cursor: pointer; box-shadow: 0 4px 10px rgba(230, 81, 0, 0.3); }
-        .btn-submit:disabled { background: #ccc; box-shadow: none; cursor: not-allowed; }
-
-        /* Modal / Popup Box for Cropper */
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.85); z-index: 9999; justify-content: center; align-items: center; padding: 15px; }
-        .modal-card { width: 100%; max-width: 450px; background: #fff; border-radius: 16px; padding: 18px; text-align: center; position: relative; max-height: 90vh; overflow-y: auto; }
-        .modal-header { font-weight: bold; font-size: 18px; margin-bottom: 12px; color: #222; }
-        .crop-viewport { width: 100%; height: 280px; background: #111; border-radius: 8px; overflow: hidden; margin-bottom: 15px; }
-        .crop-viewport img { max-width: 100%; }
-
-        /* Crop Controls */
-        .control-btns { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 6px; margin-bottom: 15px; }
-        .ctrl-btn { background: #f0f0f0; border: 1px solid #ccc; padding: 8px 4px; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; }
-        .ctrl-btn:active { background: #ddd; }
-
-        .modal-actions { display: flex; gap: 10px; }
-        .btn-cancel { flex: 1; padding: 10px; background: #f44336; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
-        .btn-save { flex: 2; padding: 10px; background: #2e7d32; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
-
-        .loading-text { font-size: 13px; color: #e65100; font-weight: bold; margin: 10px 0; display: none; }
-    </style>
+    /* Poster Preview Canvas */
+    #posterCanvas { border: 2px solid #cbd5e1; border-radius: 8px; margin-top: 10px; max-width: 100%; height: auto; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+  </style>
 </head>
 <body>
 
-<div class="container">
-    <h2>Poster Generator Studio</h2>
+  <h2>Poster Creator</h2>
+  
+  <!-- Step 1: Upload Button (Mobile pe Click karte hi Camera/Gallery ka option aayega) -->
+  <label class="upload-btn">
+    📷 Upload Photo
+    <input type="file" id="photoInput" accept="image/*" style="display:none;">
+  </label>
 
-    <!-- Preview Area -->
-    <div class="preview-box">
-        <img id="posterPreview" src="/poster-template.png" alt="Template Loading..." onerror="this.onerror=null; this.src='poster-template.png';">
+  <!-- Step 2: Crop / Zoom / Rotate Popup Window -->
+  <div id="cropModal" class="modal">
+    <div class="modal-content">
+      <h3 style="margin-top:0;">Adjust Your Photo</h3>
+      
+      <div class="img-container">
+        <img id="imageToCrop" src="" style="max-width: 100%;">
+      </div>
+      
+      <!-- Zoom & Rotate Buttons -->
+      <div class="controls">
+        <button class="btn" onclick="rotate(-90)">↺ Left</button>
+        <button class="btn" onclick="rotate(90)">↻ Right</button>
+        <button class="btn" onclick="zoom(0.1)">🔍 Zoom +</button>
+        <button class="btn" onclick="zoom(-0.1)">🔍 Zoom -</button>
+      </div>
+      
+      <button class="btn btn-success" id="cropDoneBtn">Done & Generate Poster</button>
     </div>
+  </div>
 
-    <form id="posterForm">
-        <div class="form-group">
-            <label>Naam (Name):</label>
-            <input type="text" id="nameInput" placeholder="Apna Naam Likhein" required>
-        </div>
+  <!-- Step 3: Poster Display Area -->
+  <h3>Generated Poster</h3>
+  <canvas id="posterCanvas" width="600" height="800"></canvas>
 
-        <div class="form-group">
-            <label>Mobile Number:</label>
-            <input type="tel" id="mobileInput" placeholder="Mobile Number Likhein" required>
-        </div>
-
-        <div class="form-group">
-            <label>Photo Upload Karein:</label>
-            <div class="upload-options">
-                <button type="button" class="btn-upload" onclick="triggerUpload('camera')">📷 Camera</button>
-                <button type="button" class="btn-upload" onclick="triggerUpload('gallery')">📁 Gallery</button>
-            </div>
-            <!-- Hidden inputs for Camera and Gallery -->
-            <input type="file" id="cameraInput" accept="image/*" capture="user" style="display:none">
-            <input type="file" id="galleryInput" accept="image/*" style="display:none">
-            <div id="photoStatus" class="photo-status">✓ Photo Cropped & Ready!</div>
-        </div>
-
-        <button type="submit" id="generateBtn" class="btn-submit">Generate Poster</button>
-    </form>
-</div>
-
-<!-- Modal Popup for Crop, Rotate & Zoom -->
-<div id="cropModal" class="modal-overlay">
-    <div class="modal-card">
-        <div class="modal-header">Photo Adjust Karein</div>
-        <div id="loadingText" class="loading-text">⌛ iPhone HEIC photo convert ho rahi hai, 2-3 seconds wait karein...</div>
-        
-        <div class="crop-viewport">
-            <img id="imageToCrop" src="" alt="Crop Image">
-        </div>
-
-        <div class="control-btns">
-            <button type="button" class="ctrl-btn" onclick="rotateImage(-90)">↺ Left</button>
-            <button type="button" class="ctrl-btn" onclick="rotateImage(90)">↻ Right</button>
-            <button type="button" class="ctrl-btn" onclick="zoomImage(0.1)">🔍 Zoom +</button>
-            <button type="button" class="ctrl-btn" onclick="zoomImage(-0.1)">🔍 Zoom -</button>
-        </div>
-
-        <div class="modal-actions">
-            <button type="button" class="btn-cancel" onclick="closeCropModal()">Cancel</button>
-            <button type="button" class="btn-save" onclick="applyCrop()">Done / Save Photo</button>
-        </div>
-    </div>
-</div>
-
-<!-- CDNs for HEIC conversion & Cropper.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/heic2any/0.0.4/heic2any.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
-
-<script>
+  <!-- Cropper.js Script CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+  
+  <script>
+    const photoInput = document.getElementById('photoInput');
+    const cropModal = document.getElementById('cropModal');
+    const imageToCrop = document.getElementById('imageToCrop');
+    const cropDoneBtn = document.getElementById('cropDoneBtn');
+    const posterCanvas = document.getElementById('posterCanvas');
+    const ctx = posterCanvas.getContext('2d');
+    
     let cropper = null;
-    let croppedBlob = null;
 
-    const posterConfig = {
-        templateWidth: 1080,
-        templateHeight: 1350,
-        nameX: 145,
-        nameY: 1192,
-        fontSizeName: 32,
-        fontColorName: '#000000',
-        mobileX: 180,
-        mobileY: 1266,
-        fontSizeMobile: 28,
-        fontColorMobile: '#000000',
-        photoX: 56,
-        photoY: 746,
-        photoWidth: 348,
-        photoHeight: 382
-    };
-
-    function triggerUpload(type) {
-        if(type === 'camera') {
-            document.getElementById('cameraInput').click();
-        } else {
-            document.getElementById('galleryInput').click();
-        }
-    }
-
-    document.getElementById('cameraInput').addEventListener('change', handleFileSelect);
-    document.getElementById('galleryInput').addEventListener('change', handleFileSelect);
-
-    async function handleFileSelect(e) {
-        const files = e.target.files;
-        if (!files || files.length === 0) return;
-
-        let file = files[0];
-        const modal = document.getElementById('cropModal');
-        const loadingText = document.getElementById('loadingText');
-        const imageToCrop = document.getElementById('imageToCrop');
-
-        modal.style.display = 'flex';
-        loadingText.style.display = 'none';
-
-        // Convert iPhone HEIC photo to JPEG
-        const fileName = file.name.toLowerCase();
-        if (fileName.endsWith('.heic') || fileName.endsWith('.heif') || file.type.includes('heic')) {
-            loadingText.style.display = 'block';
-            try {
-                const convertedBlob = await heic2any({
-                    blob: file,
-                    toType: "image/jpeg",
-                    quality: 0.8
-                });
-                file = Array.isArray(convertedBlob) ? convertedBlob[0] : convertedBlob;
-            } catch (err) {
-                console.error('HEIC conversion error:', err);
-                alert('iPhone HEIC photo process nahi ho paayi. Kripya normal JPG/PNG upload karein.');
-                closeCropModal();
-                return;
-            } finally {
-                loadingText.style.display = 'none';
-            }
-        }
-
+    // 1. Jab user Upload pe click karke photo select karta hai
+    photoInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
         const reader = new FileReader();
-        reader.onload = function(event) {
-            imageToCrop.src = event.target.result;
-            
-            if (cropper) cropper.destroy();
+        reader.onload = (evt) => {
+          imageToCrop.src = evt.target.result;
+          cropModal.style.display = 'flex'; // Modal Open karein
 
-            cropper = new Cropper(imageToCrop, {
-                aspectRatio: posterConfig.photoWidth / posterConfig.photoHeight,
-                viewMode: 1,
-                autoCropArea: 1
-            });
+          // Agar purana cropper instance hai toh destroy karo
+          if (cropper) cropper.destroy();
+
+          // Cropper Initialize karo
+          cropper = new Cropper(imageToCrop, {
+            aspectRatio: 1, // Photo ka shape Square (1:1) hoga
+            viewMode: 1,
+            autoCropArea: 0.9
+          });
         };
         reader.readAsDataURL(file);
-    }
-
-    function rotateImage(degree) {
-        if (cropper) cropper.rotate(degree);
-    }
-
-    function zoomImage(ratio) {
-        if (cropper) cropper.zoom(ratio);
-    }
-
-    function closeCropModal() {
-        document.getElementById('cropModal').style.display = 'none';
-        if (cropper) cropper.destroy();
-        cropper = null;
-    }
-
-    function applyCrop() {
-        if (!cropper) return;
-        
-        const canvas = cropper.getCroppedCanvas({
-            width: posterConfig.photoWidth,
-            height: posterConfig.photoHeight
-        });
-
-        canvas.toBlob((blob) => {
-            croppedBlob = blob;
-            document.getElementById('photoStatus').style.display = 'block';
-            closeCropModal();
-        }, 'image/png');
-    }
-
-    document.getElementById('posterForm').addEventListener('submit', async function(e) {
-        e.preventDefault();
-
-        const nameVal = document.getElementById('nameInput').value.trim();
-        const mobileVal = document.getElementById('mobileInput').value.trim();
-        const btn = document.getElementById('generateBtn');
-
-        btn.innerText = 'Generating Poster...';
-        btn.disabled = true;
-
-        const formData = new FormData();
-        formData.append('name', nameVal);
-        formData.append('mobile', mobileVal);
-        formData.append('config', JSON.stringify(posterConfig));
-
-        if (croppedBlob) {
-            formData.append('image', croppedBlob, 'user_photo.png');
-        }
-
-        try {
-            const response = await fetch('/api/generate', {
-                method: 'POST',
-                body: formData
-            });
-
-            if (!response.ok) {
-                throw new Error(`Server returned status ${response.status}`);
-            }
-
-            const blob = await response.blob();
-            const downloadUrl = URL.createObjectURL(blob);
-            
-            const a = document.createElement('a');
-            a.href = downloadUrl;
-            a.download = `${nameVal || 'Poster'}_Generated.png`;
-            document.body.appendChild(a);
-            a.click();
-            a.remove();
-
-        } catch (error) {
-            console.error('Generation Error:', error);
-            alert('Poster generate nahi ho saka. Kripya dobara try karein.');
-        } finally {
-            btn.innerText = 'Generate Poster';
-            btn.disabled = false;
-        }
+      }
     });
-</script>
 
+    // Control Functions
+    function rotate(deg) { if (cropper) cropper.rotate(deg); }
+    function zoom(ratio) { if (cropper) cropper.zoom(ratio); }
+
+    // 2. Crop complete karke Poster Generation Trigger karna
+    cropDoneBtn.addEventListener('click', () => {
+      if (!cropper) return;
+
+      // Cropped Image nikalna
+      const croppedCanvas = cropper.getCroppedCanvas({
+        width: 300,
+        height: 300
+      });
+
+      // Modal band karna
+      cropModal.style.display = 'none';
+
+      // Final Poster Canvas pe draw karna
+      generatePoster(croppedCanvas);
+    });
+
+    // 3. Main Poster Rendering Engine
+    function generatePoster(userPhotoCanvas) {
+      // Background Clear karo
+      ctx.clearRect(0, 0, posterCanvas.width, posterCanvas.height);
+
+      // Poster Background Color
+      ctx.fillStyle = '#f8fafc';
+      ctx.fillRect(0, 0, posterCanvas.width, posterCanvas.height);
+
+      // Poster Header Banner
+      ctx.fillStyle = '#2563eb';
+      ctx.fillRect(0, 0, posterCanvas.width, 140);
+
+      // Header Text
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 32px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('SPECIAL EVENT POSTER', posterCanvas.width / 2, 80);
+
+      // Photo Frame Outer Box
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(135, 235, 330, 330);
+
+      // User's Cropped Photo Draw Karein
+      ctx.drawImage(userPhotoCanvas, 150, 250, 300, 300);
+
+      // Photo Border
+      ctx.strokeStyle = '#2563eb';
+      ctx.lineWidth = 6;
+      ctx.strokeRect(150, 250, 300, 300);
+
+      // Footer Text
+      ctx.fillStyle = '#1e293b';
+      ctx.font = 'bold 24px sans-serif';
+      ctx.fillText('Poster Successfully Created!', posterCanvas.width / 2, 650);
+    }
+  </script>
 </body>
 </html>
