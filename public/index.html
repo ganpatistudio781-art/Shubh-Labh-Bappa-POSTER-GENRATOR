@@ -1,7 +1,7 @@
 <!DOCTYPE html>  
 <html lang="hi">  
 <head>  
-    <meta charset="8">  
+    <meta charset="UTF-8">  
     <meta name="viewport" content="width=device-width, initial-scale=1.0">  
     <title>Shubh Labh Bappa - Poster Generator</title>  
     <!-- Cropper.js CSS for Crop Popup -->  
@@ -315,11 +315,11 @@
             ctx.fillText("Please place poster-template.png in folder", canvas.width / 2, canvas.height / 2);  
         }  
 
-        // Photo: Left side se 35px badhaya (113 - 35 = 78), Upar se 20px badhaya (1083 - 20 = 1063), Neeche se 40px badhaya, Width aur Height adjust ki
+        // Photo: Pichle coordinates (78, 1063) se 100 pixel upar (1063 - 100 = 963)
         let boxX = 78;   
-        let boxY = 1063;  
-        let boxWidth = (272 - 113) + 35;   // Original width + 35px left expansion
-        let boxHeight = (1061 - 883) + 20 + 40; // Original height + 20px top + 40px bottom expansion  
+        let boxY = 963;  
+        let boxWidth = (272 - 113) + 35;   
+        let boxHeight = (1061 - 883) + 20 + 40;  
 
         if (croppedImageObj) {  
             ctx.drawImage(croppedImageObj, boxX, boxY, boxWidth, boxHeight);  
@@ -328,22 +328,22 @@
         const name = document.getElementById('userName').value;  
         const number = document.getElementById('userNumber').value;  
 
-        // Name: 8 pixel upar (1277 - 8 = 1269) aur 4 pixel right side shift (165 + 4 = 169)
+        // Name: Pichle position (1269) se 4 pixel aur upar (1269 - 4 = 1265)
         if (name) {  
             ctx.fillStyle = '#000000';  
             ctx.font = 'bold 36px Arial';  
             ctx.textAlign = 'left';  
             ctx.textBaseline = 'middle';  
-            ctx.fillText(name, 169, 1269);  
+            ctx.fillText(name, 169, 1265);  
         }  
 
-        // Mobile Number: 3 pixel upar (1346 - 3 = 1343) aur halka rightward shift (165 + 4 = 169)
+        // Mobile Number: Pichle position (1343) se 2 pixel aur upar (1343 - 2 = 1341)
         if (number) {  
             ctx.fillStyle = '#000000';  
             ctx.font = 'bold 36px Arial';  
             ctx.textAlign = 'left';  
             ctx.textBaseline = 'middle';  
-            ctx.fillText(number, 169, 1343);  
+            ctx.fillText(number, 169, 1341);  
         }  
     }  
 
