@@ -1,7 +1,7 @@
 <!DOCTYPE html>  
 <html lang="hi">  
 <head>  
-    <meta charset="UTF-8">  
+    <meta charset="8">  
     <meta name="viewport" content="width=device-width, initial-scale=1.0">  
     <title>Shubh Labh Bappa - Poster Generator</title>  
     <!-- Cropper.js CSS for Crop Popup -->  
@@ -315,14 +315,11 @@
             ctx.fillText("Please place poster-template.png in folder", canvas.width / 2, canvas.height / 2);  
         }  
 
-        // Photo: Original center/box ke hisab se, har side se 30-30 pixel bada kiya gaya hai
-        let originalCenterX = (113 + 272) / 2; // Center X point
-        let originalCenterY = (883 + 1061) / 2; // Center Y point
-        
-        let boxWidth = (272 - 113) + 60;   // Original width + 30px left + 30px right
-        let boxHeight = (1061 - 883) + 60; // Original height + 30px top + 30px bottom
-        let boxX = originalCenterX - (boxWidth / 2);   
-        let boxY = originalCenterY - (boxHeight / 2);  
+        // Photo: Left side se 35px badhaya (113 - 35 = 78), Upar se 20px badhaya (1083 - 20 = 1063), Neeche se 40px badhaya, Width aur Height adjust ki
+        let boxX = 78;   
+        let boxY = 1063;  
+        let boxWidth = (272 - 113) + 35;   // Original width + 35px left expansion
+        let boxHeight = (1061 - 883) + 20 + 40; // Original height + 20px top + 40px bottom expansion  
 
         if (croppedImageObj) {  
             ctx.drawImage(croppedImageObj, boxX, boxY, boxWidth, boxHeight);  
@@ -331,22 +328,22 @@
         const name = document.getElementById('userName').value;  
         const number = document.getElementById('userNumber').value;  
 
-        // Name: 8 pixel upar (1285 - 8 = 1277) aur size 4 badha diya (32 + 4 = 36px)
+        // Name: 8 pixel upar (1277 - 8 = 1269) aur 4 pixel right side shift (165 + 4 = 169)
         if (name) {  
             ctx.fillStyle = '#000000';  
             ctx.font = 'bold 36px Arial';  
             ctx.textAlign = 'left';  
             ctx.textBaseline = 'middle';  
-            ctx.fillText(name, 165, 1277);  
+            ctx.fillText(name, 169, 1269);  
         }  
 
-        // Mobile Number: 3 pixel upar (1349 - 3 = 1346) aur size 4 badha diya (32 + 4 = 36px)
+        // Mobile Number: 3 pixel upar (1346 - 3 = 1343) aur halka rightward shift (165 + 4 = 169)
         if (number) {  
             ctx.fillStyle = '#000000';  
             ctx.font = 'bold 36px Arial';  
             ctx.textAlign = 'left';  
             ctx.textBaseline = 'middle';  
-            ctx.fillText(number, 165, 1346);  
+            ctx.fillText(number, 169, 1343);  
         }  
     }  
 
@@ -378,7 +375,7 @@
                 }  
                 const image = document.getElementById('imageToCrop');  
                 cropper = new Cropper(image, {  
-                    aspectRatio: ((272 - 113) + 60) / ((1061 - 883) + 60),  
+                    aspectRatio: ((272 - 113) + 35) / ((1061 - 883) + 20 + 40),  
                     viewMode: 1,  
                     autoCropArea: 1,  
                 });  
@@ -404,8 +401,8 @@
     function cropAndSaveImage() {  
         if (cropper) {  
             const canvasCropped = cropper.getCroppedCanvas({  
-                width: (272 - 113) + 60,  
-                height: (1061 - 883) + 60  
+                width: (272 - 113) + 35,  
+                height: (1061 - 883) + 20 + 40  
             });  
               
             croppedImageObj = new Image();  
