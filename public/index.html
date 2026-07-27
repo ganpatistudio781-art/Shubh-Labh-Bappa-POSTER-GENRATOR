@@ -3,39 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Poster Generator</title>
+    <title>Poster Generator Studio</title>
+    <!-- Cropper.js CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css"/>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; background: #f4f4f9; padding: 20px; }
-        .container { max-width: 500px; margin: 0 auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .preview-box { margin-bottom: 20px; }
-        .preview-box img { max-width: 100%; height: auto; border-radius: 8px; border: 1px solid #ddd; }
-        input, button { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
-        button { background: #ff6600; color: white; font-weight: bold; border: none; cursor: pointer; }
-        button:hover { background: #e05500; }
+        * { box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; margin: 0; padding: 15px; text-align: center; }
+        .container { max-width: 500px; margin: 0 auto; background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h2 { margin-top: 0; color: #333; }
+        
+        .preview-box { margin: 15px 0; background: #eee; border-radius: 8px; overflow: hidden; }
+        .preview-box img { max-width: 100%; display: block; border-radius: 8px; }
+        
+        input, button { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ccc; border-radius: 6px; font-size: 15px; }
+        button { background: #e65100; color: white; font-weight: bold; border: none; cursor: pointer; transition: 0.2s; }
+        button:hover { background: #bf360c; }
+
+        /* Crop Controls */
+        .crop-container { display: none; margin: 10px 0; }
+        .crop-box { max-height: 300px; margin-bottom: 10px; }
+        .controls-btn { display: flex; gap: 8px; margin-bottom: 10px; }
+        .controls-btn button { background: #444; padding: 8px; font-size: 13px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>Poster Generator</h2>
+    <h2>Poster Generator Studio</h2>
 
-    <!-- Preview Section -->
+    <!-- Poster Template Preview -->
     <div class="preview-box">
         <img id="posterPreview" src="/poster-template.png" alt="Poster Template Loading...">
     </div>
 
-    <!-- Form Section -->
+    <!-- Inputs Form -->
     <form id="posterForm">
-        <input type="text" id="nameInput" placeholder="Apna Naam Likhein" required>
-        <input type="tel" id="mobileInput" placeholder="Mobile Number Likhein" required>
-        <input type="file" id="photoInput" accept="image/*">
+        <input type="text" id="nameInput" placeholder="Apna Naam (Name)" required>
+        <input type="tel" id="mobileInput" placeholder="Mobile Number" required>
         
-        <button type="submit" id="generateBtn">Generate & Download Poster</button>
+        <label style="display:block; text-align:left; font-weight:bold; margin-top:10px;">Upload Photo:</label>
+        <input type="file" id="photoInput" accept="image/*">
+
+        <!-- Crop / Rotate / Zoom Tools UI -->
+        <div id="cropArea" class="crop-container">
+            <div class="crop-box">
+                <img id="imageToCrop" src="" alt="To Crop">
+            </div>
+            <div class="controls-btn">
+                <button type="button" onclick="rotateImage(-90)">↺ Rotate Left</button>
+                <button type="button" onclick="rotateImage(90)">↻ Rotate Right</button>
+                <button type="button" onclick="zoomImage(0.1)">🔍 Zoom In</button>
+                <button type="button" onclick="zoomImage(-0.1)">🔍 Zoom Out</button>
+            </div>
+        </div>
+        
+        <button type="submit" id="generateBtn">Generate Poster</button>
     </form>
 </div>
 
+<!-- Cropper.js JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
 <script>
-    // Configuration object for layout alignment
+    let cropper = null;
+    const photoInput = document.getElementById('photoInput');
+    const cropArea = document.getElementById('cropArea');
+    const imageToCrop = document.getElementById('imageToCrop');
+
+    // Layout configuration for backend alignment
     const posterConfig = {
         templateWidth: 1080,
         templateHeight: 1350,
@@ -53,6 +87,38 @@
         photoHeight: 382
     };
 
+    // Initialize Cropper when user uploads an image
+    photoInput.addEventListener('change', function(e) {
+        const files = e.target.files;
+        if (files && files.length > 0) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                imageToCrop.src = event.target.result;
+                cropArea.style.display = 'block';
+
+                if (cropper) {
+                    cropper.destroy();
+                }
+
+                cropper = new Cropper(imageToCrop, {
+                    aspectRatio: posterConfig.photoWidth / posterConfig.photoHeight,
+                    viewMode: 1,
+                    autoCropArea: 1
+                });
+            };
+            reader.readAsDataURL(files[0]);
+        }
+    });
+
+    function rotateImage(degree) {
+        if (cropper) cropper.rotate(degree);
+    }
+
+    function zoomImage(ratio) {
+        if (cropper) cropper.zoom(ratio);
+    }
+
+    // Submit and Generate Poster
     document.getElementById('posterForm').addEventListener('submit', async function(e) {
         e.preventDefault();
         
@@ -65,13 +131,23 @@
         formData.append('mobile', document.getElementById('mobileInput').value);
         formData.append('config', JSON.stringify(posterConfig));
 
-        const photoFile = document.getElementById('photoInput').files[0];
-        if (photoFile) {
-            formData.append('image', photoFile);
+        // Get cropped image blob
+        if (cropper) {
+            const canvas = cropper.getCroppedCanvas({
+                width: posterConfig.photoWidth,
+                height: posterConfig.photoHeight
+            });
+
+            await new Promise((resolve) => {
+                canvas.toBlob((blob) => {
+                    formData.append('image', blob, 'user_photo.png');
+                    resolve();
+                }, 'image/png');
+            });
         }
 
         try {
-            // RELATIVE PATH: Works on localhost AND Vercel
+            // Correct API route relative to Vercel
             const response = await fetch('/api/generate', {
                 method: 'POST',
                 body: formData
@@ -95,7 +171,7 @@
             console.error('Error:', error);
             alert('Failed to generate poster. Please try again.');
         } finally {
-            btn.innerText = 'Generate & Download Poster';
+            btn.innerText = 'Generate Poster';
             btn.disabled = false;
         }
     });
