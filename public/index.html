@@ -315,11 +315,12 @@
             ctx.fillText("Please place poster-template.png in folder", canvas.width / 2, canvas.height / 2);  
         }  
 
-        // Photo: Pichle Y position (963) se 100 pixel aur upar (963 - 100 = 863)
+        // Photo: Base X (113) se left 35px badhaya (78), Base Y (883) se upar 15px badhaya (868). 
+        // Width ko left 35px + right 0px badhaya, Height ko upar 15px + neeche 20px badhaya.
         let boxX = 78;   
-        let boxY = 863;  
-        let boxWidth = (272 - 113) + 35;   
-        let boxHeight = (1061 - 883) + 20 + 40;  
+        let boxY = 868;  
+        let boxWidth = (272 - 113) + 35;   // 159 + 35 = 194
+        let boxHeight = (1061 - 883) + 15 + 20; // 178 + 35 = 213  
 
         if (croppedImageObj) {  
             ctx.drawImage(croppedImageObj, boxX, boxY, boxWidth, boxHeight);  
@@ -328,7 +329,7 @@
         const name = document.getElementById('userName').value;  
         const number = document.getElementById('userNumber').value;  
 
-        // Name: Pichle position (1265) se 5 pixel aur upar (1265 - 5 = 1260)
+        // Name: Perfect position (1260)
         if (name) {  
             ctx.fillStyle = '#000000';  
             ctx.font = 'bold 36px Arial';  
@@ -337,7 +338,7 @@
             ctx.fillText(name, 169, 1260);  
         }  
 
-        // Mobile Number: Unchanged position (1341)
+        // Mobile Number: Perfect position (1341)
         if (number) {  
             ctx.fillStyle = '#000000';  
             ctx.font = 'bold 36px Arial';  
@@ -375,7 +376,7 @@
                 }  
                 const image = document.getElementById('imageToCrop');  
                 cropper = new Cropper(image, {  
-                    aspectRatio: ((272 - 113) + 35) / ((1061 - 883) + 20 + 40),  
+                    aspectRatio: ((272 - 113) + 35) / ((1061 - 883) + 15 + 20),  
                     viewMode: 1,  
                     autoCropArea: 1,  
                 });  
@@ -402,7 +403,7 @@
         if (cropper) {  
             const canvasCropped = cropper.getCroppedCanvas({  
                 width: (272 - 113) + 35,  
-                height: (1061 - 883) + 20 + 40  
+                height: (1061 - 883) + 15 + 20  
             });  
               
             croppedImageObj = new Image();  
