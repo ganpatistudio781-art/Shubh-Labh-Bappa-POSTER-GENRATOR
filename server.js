@@ -17,9 +17,9 @@ const upload = multer({ storage: multer.memoryStorage() });
 app.post('/api/generate', upload.single('image'), async (req, res) => {
     try {
         const { name, mobile, config: configString } = req.body;
-        const config = JSON.parse(configString);
+        const config = JSON.parse(configString || '{}');
         
-        // Multiple fallback paths to guarantee template loading on Vercel
+        // Multiple fallback paths for Vercel Serverless environment
         const possiblePaths = [
             path.join(__dirname, 'public', 'poster-template.png'),
             path.join(process.cwd(), 'public', 'poster-template.png'),
@@ -37,7 +37,7 @@ app.post('/api/generate', upload.single('image'), async (req, res) => {
         let photoBuffer = null;
         if (req.file) {
             photoBuffer = await sharp(req.file.buffer)
-                .resize(config.photoWidth, config.photoHeight, { fit: 'cover' })
+                .resize(config.photoWidth || 348, config.photoHeight || 382, { fit: 'cover' })
                 .png()
                 .toBuffer();
         }
@@ -47,23 +47,23 @@ app.post('/api/generate', upload.single('image'), async (req, res) => {
         const safeMobile = (mobile || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
         const svgText = `
-            <svg width="${config.templateWidth}" height="${config.templateHeight}">
+            <svg width="${config.templateWidth || 1080}" height="${config.templateHeight || 1350}">
                 <style>
                     .nameText {
                         font-family: 'Arial', sans-serif;
-                        font-size: ${config.fontSizeName}px;
+                        font-size: ${config.fontSizeName || 28}px;
                         font-weight: bold;
-                        fill: ${config.fontColorName};
+                        fill: ${config.fontColorName || '#000000'};
                     }
                     .mobileText {
                         font-family: 'Arial', sans-serif;
-                        font-size: ${config.fontSizeMobile}px;
+                        font-size: ${config.fontSizeMobile || 26}px;
                         font-weight: bold;
-                        fill: ${config.fontColorMobile};
+                        fill: ${config.fontColorMobile || '#000000'};
                     }
                 </style>
-                <text x="${config.nameX}" y="${config.nameY}" text-anchor="start" class="nameText">${safeName}</text>
-                <text x="${config.mobileX}" y="${config.mobileY}" text-anchor="start" class="mobileText">${safeMobile}</text>
+                <text x="${config.nameX || 145}" y="${config.nameY || 1192}" text-anchor="start" class="nameText">${safeName}</text>
+                <text x="${config.mobileX || 180}" y="${config.mobileY || 1266}" text-anchor="start" class="mobileText">${safeMobile}</text>
             </svg>
         `;
 
@@ -73,8 +73,8 @@ app.post('/api/generate', upload.single('image'), async (req, res) => {
         if (photoBuffer) {
             compositeLayers.push({
                 input: photoBuffer,
-                top: config.photoY,
-                left: config.photoX
+                top: config.photoY || 746,
+                left: config.photoX || 56
             });
         }
 
@@ -90,7 +90,7 @@ app.post('/api/generate', upload.single('image'), async (req, res) => {
             .png({ quality: 100 })
             .toBuffer();
 
-        // 5. Send output
+        // 5. Send HD PNG output to client
         res.setHeader('Content-Type', 'image/png');
         res.setHeader('Content-Disposition', `attachment; filename="${name ? name.replace(/\s+/g, '_') : 'Poster'}_Generated.png"`);
         res.send(outputBuffer);
