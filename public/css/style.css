@@ -1,51 +1,60 @@
+/* ===========================
+   Poster Generator V2
+   CSS Part 1
+=========================== */
+
 *{
     margin:0;
     padding:0;
     box-sizing:border-box;
-    font-family:Arial,Helvetica,sans-serif;
+    font-family:'Poppins',sans-serif;
 }
 
 body{
-    background:#f5f5f5;
+    background:#eef2f7;
     color:#222;
 }
 
-.container{
-    width:100%;
-    max-width:500px;
+.app{
+    max-width:520px;
     margin:auto;
+    min-height:100vh;
     padding:15px;
 }
 
-header{
+.topBar{
     text-align:center;
-    padding:20px;
-    margin-bottom:15px;
+    margin-bottom:20px;
 }
 
-header h1{
+.topBar h1{
     font-size:30px;
-    font-weight:bold;
+    font-weight:700;
+    color:#222;
 }
 
-header p{
-    color:#666;
+.topBar p{
     margin-top:8px;
+    color:#666;
+    font-size:15px;
 }
 
-.previewCard{
+.previewCard,
+.editorCard{
 
     background:#fff;
 
-    border-radius:18px;
+    border-radius:22px;
 
-    padding:15px;
+    padding:18px;
 
-    box-shadow:0 8px 25px rgba(0,0,0,.12);
+    box-shadow:0 12px 35px rgba(0,0,0,.12);
+
+    margin-bottom:18px;
 
 }
 
-.posterBox{
+.posterPreview{
 
     width:100%;
 
@@ -53,7 +62,7 @@ header p{
 
     overflow:hidden;
 
-    border-radius:15px;
+    border-radius:18px;
 
     background:#ddd;
 
@@ -69,21 +78,7 @@ header p{
 
 }
 
-.formCard{
-
-    margin-top:20px;
-
-    background:#fff;
-
-    border-radius:18px;
-
-    padding:20px;
-
-    box-shadow:0 8px 25px rgba(0,0,0,.12);
-
-}
-
-.formCard h2{
+.editorCard h2{
 
     text-align:center;
 
@@ -91,73 +86,105 @@ header p{
 
 }
 
-.formCard label{
+.inputGroup{
 
-    display:block;
-
-    margin-top:15px;
-
-    margin-bottom:8px;
-
-    font-weight:bold;
+    margin-bottom:18px;
 
 }
 
-.formCard input{
+.inputGroup label{
+
+    display:block;
+
+    font-weight:600;
+
+    margin-bottom:8px;
+
+}
+
+.inputGroup input{
 
     width:100%;
 
-    padding:14px;
+    height:50px;
 
     border:2px solid #ddd;
 
-    border-radius:12px;
+    border-radius:14px;
+
+    padding:0 15px;
 
     font-size:16px;
 
     outline:none;
 
+    transition:.25s;
+
 }
 
-.formCard input:focus{
+.inputGroup input:focus{
 
     border-color:#ff9800;
 
-}
-/* Buttons */
+    box-shadow:0 0 0 4px rgba(255,152,0,.15);
 
-.primaryBtn{
+}
+/* ===========================
+   Buttons
+=========================== */
+
+.buttonGroup{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:15px;
+
+    margin-top:20px;
+
+}
+
+.primaryBtn,
+.generateBtn{
 
     width:100%;
 
-    padding:15px;
-
-    margin-top:18px;
+    height:55px;
 
     border:none;
 
-    border-radius:14px;
+    border-radius:16px;
 
-    background:#ff7a00;
+    background:linear-gradient(135deg,#ff9800,#ff5722);
 
-    color:white;
+    color:#fff;
 
     font-size:17px;
 
-    font-weight:bold;
+    font-weight:700;
 
     cursor:pointer;
 
-    transition:.3s;
+    transition:.25s;
+
+    box-shadow:0 8px 20px rgba(255,87,34,.25);
 
 }
 
-.primaryBtn:hover{
+.primaryBtn:hover,
+.generateBtn:hover{
 
-    transform:scale(1.02);
+    transform:translateY(-2px);
 
 }
 
+.primaryBtn:active,
+.generateBtn:active{
+
+    transform:scale(.98);
+
+}
 
 .downloadBtn{
 
@@ -165,376 +192,201 @@ header p{
 
     width:100%;
 
+    height:55px;
+
+    line-height:55px;
+
     text-align:center;
 
     text-decoration:none;
 
-    padding:15px;
+    border-radius:16px;
 
-    margin-top:15px;
+    background:linear-gradient(135deg,#16a34a,#22c55e);
 
-    border-radius:14px;
+    color:#fff;
 
-    background:#28a745;
+    font-weight:700;
 
-    color:white;
-
-    font-size:17px;
-
-    font-weight:bold;
-
-}
-
-
-/* Photo Bottom Sheet */
-
-.bottomSheet{
-
-    display:none;
-
-    position:fixed;
-
-    inset:0;
-
-    background:rgba(0,0,0,.6);
-
-    z-index:1000;
-
-}
-
-
-.sheetBox{
-
-    position:absolute;
-
-    bottom:0;
-
-    width:100%;
-
-    background:white;
-
-    border-radius:25px 25px 0 0;
-
-    padding:25px;
-
-    animation:slideUp .3s ease;
-
-}
-
-
-.sheetBox h3{
-
-    text-align:center;
-
-    margin-bottom:15px;
-
-}
-
-
-.sheetBtn{
-
-    width:100%;
-
-    padding:15px;
-
-    margin:8px 0;
-
-    border:none;
-
-    border-radius:12px;
-
-    font-size:16px;
-
-    font-weight:bold;
-
-    background:#eeeeee;
-
-    cursor:pointer;
-
-}
-
-
-.sheetBtn.cancel{
-
-    background:#e53935;
-
-    color:white;
-
-}
-
-
-/* Crop Modal */
-
+    font-size:17px
+/* ===========================
+   Crop Modal
+=========================== */
 
 .cropModal{
-
-    display:none;
-
     position:fixed;
-
     inset:0;
-
-    background:rgba(0,0,0,.85);
-
-    z-index:2000;
-
+    display:none;
     justify-content:center;
-
     align-items:center;
-
+    background:rgba(0,0,0,.75);
+    z-index:9999;
 }
 
-
-.cropCard{
-
+.cropContainer{
     width:95%;
-
-    max-width:500px;
-
-    background:white;
-
-    border-radius:20px;
-
-    padding:20px;
-
+    max-width:520px;
+    background:#fff;
+    border-radius:22px;
+    overflow:hidden;
+    animation:popup .25s ease;
 }
 
-
-.cropCard h2{
-
+.cropHeader{
+    padding:18px;
     text-align:center;
-
-    margin-bottom:15px;
-
+    border-bottom:1px solid #eee;
 }
 
+.cropHeader h2{
+    font-size:20px;
+}
+
+.cropBody{
+    padding:15px;
+    background:#111;
+}
 
 #cropImage{
-
     width:100%;
-
-    max-height:400px;
-
+    display:block;
+    max-height:60vh;
 }
 
-
-.toolBar{
-
+.cropTools{
     display:grid;
-
-    grid-template-columns:repeat(4,1fr);
-
+    grid-template-columns:repeat(5,1fr);
     gap:10px;
-
-    margin-top:15px;
-
+    padding:15px;
 }
 
-
-.toolBar button{
-
-    padding:12px;
-
+.toolBtn{
+    height:46px;
     border:none;
-
-    border-radius:10px;
-
-    background:#ff9800;
-
-    color:white;
-
-    font-size:18px;
-
-}
-
-
-.actionBar{
-
-    display:grid;
-
-    grid-template-columns:1fr 1fr;
-
-    gap:10px;
-
-    margin-top:15px;
-
-}
-
-
-.actionBar button{
-
-    padding:14px;
-
-    border:none;
-
     border-radius:12px;
-
-    font-weight:bold;
-
+    background:#f4f4f4;
+    font-size:16px;
+    font-weight:600;
+    cursor:pointer;
 }
 
+.cropActions{
+    display:flex;
+    gap:12px;
+    padding:0 15px 18px;
+}
+
+.cancelBtn,
+.doneBtn{
+    flex:1;
+    height:50px;
+    border:none;
+    border-radius:14px;
+    font-size:16px;
+    font-weight:700;
+    cursor:pointer;
+}
 
 .cancelBtn{
-
-    background:#e53935;
-
-    color:white;
-
+    background:#ef4444;
+    color:#fff;
 }
-
 
 .doneBtn{
-
-    background:#28a745;
-
-    color:white;
-
+    background:#16a34a;
+    color:#fff;
 }
-/* YouTube Button */
 
-.youtubeBtn{
 
-    display:block;
+/* ===========================
+   Loader
+=========================== */
 
-    margin-top:20px;
+.loader{
+    position:fixed;
+    inset:0;
+    display:none;
+    justify-content:center;
+    align-items:center;
+    background:rgba(255,255,255,.85);
+    z-index:10000;
+}
 
-    padding:14px;
-
+.loaderBox{
+    background:#fff;
+    padding:25px;
+    border-radius:18px;
     text-align:center;
+    box-shadow:0 10px 30px rgba(0,0,0,.15);
+}
 
-    text-decoration:none;
+.spinner{
+    width:55px;
+    height:55px;
+    border:5px solid #eee;
+    border-top-color:#ff7a00;
+    border-radius:50%;
+    margin:auto;
+    animation:spin 1s linear infinite;
+}
 
-    border-radius:14px;
-
-    background:#ff0000;
-
-    color:white;
-
-    font-weight:bold;
-
-    font-size:16px;
-
+.loaderBox p{
+    margin-top:15px;
+    font-weight:600;
 }
 
 
-/* Animations */
+/* ===========================
+   Footer
+=========================== */
 
-.sheetBox{
-
-    animation:slideUp .3s ease;
-
+footer{
+    text-align:center;
+    padding:20px;
+    color:#777;
+    font-size:14px;
 }
 
 
-.cropCard{
+/* ===========================
+   Animations
+=========================== */
 
-    animation:zoomIn .25s ease;
-
-}
-
-
-@keyframes slideUp{
-
-    from{
-
-        transform:translateY(100%);
-
-    }
-
+@keyframes spin{
     to{
-
-        transform:translateY(0);
-
+        transform:rotate(360deg);
     }
-
 }
 
-
-@keyframes zoomIn{
-
+@keyframes popup{
     from{
-
-        transform:scale(.8);
-
         opacity:0;
-
+        transform:scale(.9);
     }
-
     to{
-
-        transform:scale(1);
-
         opacity:1;
-
+        transform:scale(1);
     }
-
 }
 
 
-/* Button Effects */
-
-button{
-
-    transition:.25s ease;
-
-}
-
-
-button:active{
-
-    transform:scale(.96);
-
-}
-
-
-/* Mobile Responsive */
+/* ===========================
+   Responsive
+=========================== */
 
 @media(max-width:480px){
 
-    .container{
-
-        padding:10px;
-
+    .topBar h1{
+        font-size:25px;
     }
 
-
-    header h1{
-
-        font-size:24px;
-
-    }
-
-
-    .formCard,
-    .previewCard{
-
+    .previewCard,
+    .editorCard{
         padding:15px;
-
     }
 
-
-    .cropCard{
-
-        width:96%;
-
+    .cropTools{
+        grid-template-columns:repeat(3,1fr);
     }
-
-
-    .toolBar button{
-
-        font-size:16px;
-
-        padding:10px;
-
-    }
-
-}
-
-
-/* Hide Scroll while Crop Open */
-
-body.cropOpen{
-
-    overflow:hidden;
 
 }
