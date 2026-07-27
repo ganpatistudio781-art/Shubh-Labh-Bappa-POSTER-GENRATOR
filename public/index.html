@@ -315,7 +315,7 @@
             ctx.fillText("Please place poster-template.png in folder", canvas.width / 2, canvas.height / 2);  
         }  
 
-        // Photo Coordinates + 200px Neeche (883 + 200 = 1083, 1061 + 200 = 1261)
+        // Photo Coordinates + 200px Neeche
         let boxX = 113;   
         let boxY = 883 + 200;  
         let boxWidth = 272 - 113;   // 159
@@ -328,22 +328,22 @@
         const name = document.getElementById('userName').value;  
         const number = document.getElementById('userNumber').value;  
 
-        // Name Coordinates + 200px Neeche (1110 + 200 = 1310)
+        // Name: Thoda upar kiya (1310 se thoda kam karke 1290 kiya) aur size 6 badha diya (26 + 6 = 32px)
         if (name) {  
             ctx.fillStyle = '#000000';  
-            ctx.font = 'bold 26px Arial';  
+            ctx.font = 'bold 32px Arial';  
             ctx.textAlign = 'left';  
             ctx.textBaseline = 'middle';  
-            ctx.fillText(name, 165, 1110 + 200);  
+            ctx.fillText(name, 165, 1290);  
         }  
 
-        // Mobile Number Coordinates + 200px Neeche (1154 + 200 = 1354)
+        // Mobile Number: 3 pixel upar kiya (1354 - 3 = 151) aur size bhi bada kiya (32px)
         if (number) {  
             ctx.fillStyle = '#000000';  
-            ctx.font = 'bold 26px Arial';  
+            ctx.font = 'bold 32px Arial';  
             ctx.textAlign = 'left';  
             ctx.textBaseline = 'middle';  
-            ctx.fillText(number, 165, 1154 + 200);  
+            ctx.fillText(number, 165, 1351);  
         }  
     }  
 
@@ -406,7 +406,8 @@
             });  
               
             croppedImageObj = new Image();  
-            croppedImageObj.src = canvasCropped.dataURL();  
+            // Fixed the typo here from dataURL() to toDataURL() so crop & save works properly now
+            croppedImageObj.src = canvasCropped.toDataURL();  
             croppedImageObj.onload = function() {  
                 updatePoster();  
                 closeCropModal();  
