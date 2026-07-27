@@ -1,164 +1,270 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Poster Generator with Crop Modal</title>
-  
-  <!-- 1. Cropper.js CSS (Popup me Crop/Zoom/Rotate ke liye) -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css"/>
-  
-  <style>
-    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; background: #f4f7f6; padding: 20px; }
-    
-    /* Upload Button */
-    .upload-btn { background: #2563eb; color: white; padding: 14px 28px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 16px; display: inline-block; margin-bottom: 20px; }
-    .upload-btn:hover { background: #1d4ed8; }
-    
-    /* Popup / Modal Window Styling */
-    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1000; justify-content: center; align-items: center; }
-    .modal-content { background: #ffffff; padding: 20px; border-radius: 12px; max-width: 450px; width: 90%; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
-    .img-container { max-height: 320px; width: 100%; overflow: hidden; margin-bottom: 15px; background: #000; border-radius: 8px; }
-    
-    /* Control Buttons Inside Modal */
-    .controls { display: flex; gap: 8px; justify-content: center; margin-bottom: 15px; flex-wrap: wrap; }
-    .btn { padding: 8px 14px; border: none; background: #374151; color: white; border-radius: 6px; cursor: pointer; font-size: 14px; }
-    .btn:hover { background: #1f2937; }
-    .btn-success { background: #16a34a; font-weight: bold; width: 100%; padding: 12px; margin-top: 5px; }
-    .btn-success:hover { background: #15803d; }
-
-    /* Poster Preview Canvas */
-    #posterCanvas { border: 2px solid #cbd5e1; border-radius: 8px; margin-top: 10px; max-width: 100%; height: auto; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shubh Labh Bappa - Poster Generator</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            color: #333;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            width: 100%;
+            max-width: 450px;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        /* 1. Channel Name */
+        .channel-title {
+            font-size: 26px;
+            font-weight: bold;
+            color: #ff5722;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        /* 2. YouTube Channel Link */
+        .channel-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #ffffff;
+            background-color: #ff0000;
+            padding: 8px 16px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+        .channel-link:hover {
+            background-color: #cc0000;
+        }
+        /* 3. Poster Preview / Container */
+        .poster-section {
+            margin-bottom: 20px;
+        }
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #444;
+        }
+        .poster-preview {
+            width: 100%;
+            height: 350px;
+            background: #f0f0f0;
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+            background-size: cover;
+            background-position: center;
+        }
+        #posterCanvas {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+        /* 4. Form Inputs & Button */
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #555;
+        }
+        .form-control {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        .form-control:focus {
+            border-color: #ff5722;
+        }
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            width: 100%;
+        }
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 5px;
+        }
+        .btn:hover {
+            background-color: #218838;
+        }
+    </style>
 </head>
 <body>
 
-  <h2>Poster Creator</h2>
-  
-  <!-- Step 1: Upload Button (Mobile pe Click karte hi Camera/Gallery ka option aayega) -->
-  <label class="upload-btn">
-    📷 Upload Photo
-    <input type="file" id="photoInput" accept="image/*" style="display:none;">
-  </label>
+    <div class="container">
+        <!-- 1. Channel Name -->
+        <div class="channel-title">Shubh Labh Bappa</div>
 
-  <!-- Step 2: Crop / Zoom / Rotate Popup Window -->
-  <div id="cropModal" class="modal">
-    <div class="modal-content">
-      <h3 style="margin-top:0;">Adjust Your Photo</h3>
-      
-      <div class="img-container">
-        <img id="imageToCrop" src="" style="max-width: 100%;">
-      </div>
-      
-      <!-- Zoom & Rotate Buttons -->
-      <div class="controls">
-        <button class="btn" onclick="rotate(-90)">↺ Left</button>
-        <button class="btn" onclick="rotate(90)">↻ Right</button>
-        <button class="btn" onclick="zoom(0.1)">🔍 Zoom +</button>
-        <button class="btn" onclick="zoom(-0.1)">🔍 Zoom -</button>
-      </div>
-      
-      <button class="btn btn-success" id="cropDoneBtn">Done & Generate Poster</button>
+        <!-- 2. YouTube Channel Link -->
+        <a href="https://youtube.com/@ganpati_shubhlabh23?si=YC3ffPcw5cYLBn_c" target="_blank" class="channel-link">
+            📺 Subscribe YouTube Channel
+        </a>
+
+        <!-- 3. Poster Preview Section -->
+        <div class="poster-section">
+            <div class="section-title">Preview Poster</div>
+            <div class="poster-preview" id="previewBox">
+                <canvas id="posterCanvas" style="display:none;"></canvas>
+                <span id="placeholderText" style="color: #888; font-size: 14px;">Poster yahan dikhega</span>
+            </div>
+        </div>
+
+        <!-- 4. Inputs: Name, Number, Photo Upload & Generate Button -->
+        <div class="form-group">
+            <label for="userName">Apna Naam:</label>
+            <input type="text" id="userName" class="form-control" placeholder="Apna naam yahan likhein">
+        </div>
+
+        <div class="form-group">
+            <label for="userNumber">Mobile Number:</label>
+            <input type="tel" id="userNumber" class="form-control" placeholder="Apna mobile number likhein">
+        </div>
+
+        <div class="form-group">
+            <label for="userPhoto">Photo Upload Karein:</label>
+            <input type="file" id="userPhoto" class="form-control" accept="image/*">
+        </div>
+
+        <button class="btn" onclick="generatePoster()">Generate Poster</button>
     </div>
-  </div>
 
-  <!-- Step 3: Poster Display Area -->
-  <h3>Generated Poster</h3>
-  <canvas id="posterCanvas" width="600" height="800"></canvas>
+    <script>
+        function generatePoster() {
+            const name = document.getElementById('userName').value;
+            const number = document.getElementById('userNumber').value;
+            const photoInput = document.getElementById('userPhoto');
+            const canvas = document.getElementById('posterCanvas');
+            const placeholder = document.getElementById('placeholderText');
+            
+            if (!name) {
+                alert('Kripya apna naam darj karein!');
+                return;
+            }
 
-  <!-- Cropper.js Script CDN -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
-  
-  <script>
-    const photoInput = document.getElementById('photoInput');
-    const cropModal = document.getElementById('cropModal');
-    const imageToCrop = document.getElementById('imageToCrop');
-    const cropDoneBtn = document.getElementById('cropDoneBtn');
-    const posterCanvas = document.getElementById('posterCanvas');
-    const ctx = posterCanvas.getContext('2d');
-    
-    let cropper = null;
+            canvas.style.display = 'block';
+            placeholder.style.display = 'none';
 
-    // 1. Jab user Upload pe click karke photo select karta hai
-    photoInput.addEventListener('change', (e) => {
-      const file = e.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = (evt) => {
-          imageToCrop.src = evt.target.result;
-          cropModal.style.display = 'flex'; // Modal Open karein
+            const ctx = canvas.getContext('2d');
+            // Canvas standard resolution
+            canvas.width = 600;
+            canvas.height = 750;
 
-          // Agar purana cropper instance hai toh destroy karo
-          if (cropper) cropper.destroy();
+            // Background Design (Gradient)
+            let gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            gradient.addColorStop(0, '#ff9933');
+            gradient.addColorStop(0.5, '#ffcc00');
+            gradient.addColorStop(1, '#ff5722');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-          // Cropper Initialize karo
-          cropper = new Cropper(imageToCrop, {
-            aspectRatio: 1, // Photo ka shape Square (1:1) hoga
-            viewMode: 1,
-            autoCropArea: 0.9
-          });
-        };
-        reader.readAsDataURL(file);
-      }
-    });
+            // Header text inside poster
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 30px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('SHUBH LABH BAPPA', canvas.width / 2, 50);
 
-    // Control Functions
-    function rotate(deg) { if (cropper) cropper.rotate(deg); }
-    function zoom(ratio) { if (cropper) cropper.zoom(ratio); }
+            // Draw Photo if uploaded
+            if (photoInput.files && photoInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.onload = function() {
+                        // Draw circular or rectangular user photo frame
+                        ctx.save();
+                        ctx.beginPath();
+                        ctx.arc(canvas.width / 2, 220, 90, 0, Math.PI * 2, true);
+                        ctx.closePath();
+                        ctx.clip();
+                        ctx.drawImage(img, canvas.width / 2 - 90, 130, 180, 180);
+                        ctx.restore();
 
-    // 2. Crop complete karke Poster Generation Trigger karna
-    cropDoneBtn.addEventListener('click', () => {
-      if (!cropper) return;
+                        // Border around photo
+                        ctx.strokeStyle = '#ffffff';
+                        ctx.lineWidth = 5;
+                        ctx.beginPath();
+                        ctx.arc(canvas.width / 2, 220, 90, 0, Math.PI * 2, true);
+                        ctx.stroke();
 
-      // Cropped Image nikalna
-      const croppedCanvas = cropper.getCroppedCanvas({
-        width: 300,
-        height: 300
-      });
+                        drawDetails(ctx, name, number, canvas);
+                    }
+                    img.src = e.target.result;
+                }
+                reader.readAsDataURL(photoInput.files[0]);
+            } else {
+                // Default placeholder circle if no photo
+                ctx.fillStyle = '#fff';
+                ctx.beginPath();
+                ctx.arc(canvas.width / 2, 220, 90, 0, Math.PI * 2, true);
+                ctx.fill();
+                
+                ctx.fillStyle = '#333';
+                ctx.font = '16px Arial';
+                ctx.fillText('No Photo', canvas.width / 2, 225);
 
-      // Modal band karna
-      cropModal.style.display = 'none';
+                drawDetails(ctx, name, number, canvas);
+            }
+        }
 
-      // Final Poster Canvas pe draw karna
-      generatePoster(croppedCanvas);
-    });
+        function drawDetails(ctx, name, number, canvas) {
+            // Name
+            ctx.fillStyle = '#000000';
+            ctx.font = 'bold 28px Arial';
+            ctx.fillText(name, canvas.width / 2, 360);
 
-    // 3. Main Poster Rendering Engine
-    function generatePoster(userPhotoCanvas) {
-      // Background Clear karo
-      ctx.clearRect(0, 0, posterCanvas.width, posterCanvas.height);
+            // Number
+            if(number) {
+                ctx.font = '20px Arial';
+                ctx.fillText('Mob: ' + number, canvas.width / 2, 400);
+            }
 
-      // Poster Background Color
-      ctx.fillStyle = '#f8fafc';
-      ctx.fillRect(0, 0, posterCanvas.width, posterCanvas.height);
-
-      // Poster Header Banner
-      ctx.fillStyle = '#2563eb';
-      ctx.fillRect(0, 0, posterCanvas.width, 140);
-
-      // Header Text
-      ctx.fillStyle = '#ffffff';
-      ctx.font = 'bold 32px sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillText('SPECIAL EVENT POSTER', posterCanvas.width / 2, 80);
-
-      // Photo Frame Outer Box
-      ctx.fillStyle = '#ffffff';
-      ctx.fillRect(135, 235, 330, 330);
-
-      // User's Cropped Photo Draw Karein
-      ctx.drawImage(userPhotoCanvas, 150, 250, 300, 300);
-
-      // Photo Border
-      ctx.strokeStyle = '#2563eb';
-      ctx.lineWidth = 6;
-      ctx.strokeRect(150, 250, 300, 300);
-
-      // Footer Text
-      ctx.fillStyle = '#1e293b';
-      ctx.font = 'bold 24px sans-serif';
-      ctx.fillText('Poster Successfully Created!', posterCanvas.width / 2, 650);
-    }
-  </script>
+            // Footer / Channel Branding inside poster
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'italic 18px Arial';
+            ctx.fillText('Blessed by Shubh Labh Bappa', canvas.width / 2, canvas.height - 40);
+        }
+    </script>
 </body>
 </html>
