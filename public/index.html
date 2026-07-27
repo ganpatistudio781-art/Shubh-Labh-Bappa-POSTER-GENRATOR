@@ -276,42 +276,35 @@
     let templateImg = new Image();  
     let croppedImageObj = null;  
     let cropper = null;  
+    let isTemplateLoaded = false;  
 
     const canvas = document.getElementById('posterCanvas');  
     const ctx = canvas.getContext('2d');  
 
-    function initCanvasSize() {  
-        if (templateImg.naturalWidth && templateImg.naturalHeight) {  
-            canvas.width = templateImg.naturalWidth;  
-            canvas.height = templateImg.naturalHeight;  
-        } else {  
+    function initTemplate() {  
+        templateImg.crossOrigin = "anonymous";  
+        templateImg.onload = function() {  
+            canvas.width = templateImg.naturalWidth || 1080;  
+            canvas.height = templateImg.naturalHeight || 1350;  
+            isTemplateLoaded = true;  
+            updatePoster();  
+        };  
+        templateImg.onerror = function() {  
+            console.error("Failed to load poster-template.png");  
+            isTemplateLoaded = false;  
             canvas.width = 1080;  
             canvas.height = 1350;  
-        }  
-        updatePoster();  
+            updatePoster();  
+        };  
+        templateImg.src = 'poster-template.png';  
     }  
 
-    templateImg.onload = function() {  
-        initCanvasSize();  
-    };  
-
-    templateImg.onerror = function() {  
-        canvas.width = 1080;  
-        canvas.height = 1350;  
-        updatePoster();  
-    }  
-
-    // Using separate template file 'poster-template.png' as requested  
-    templateImg.src = 'poster-template.png';  
-
-    if (templateImg.complete) {  
-        initCanvasSize();  
-    }  
+    initTemplate();  
 
     function updatePoster() {  
         ctx.clearRect(0, 0, canvas.width, canvas.height);  
-        
-        if (templateImg.complete && templateImg.naturalWidth !== 0) {  
+          
+        if (isTemplateLoaded) {  
             ctx.drawImage(templateImg, 0, 0, canvas.width, canvas.height);  
         } else {  
             ctx.fillStyle = "#ffffff";  
@@ -319,7 +312,7 @@
             ctx.fillStyle = "#ff5722";  
             ctx.font = 'bold 40px Arial';  
             ctx.textAlign = 'center';  
-            ctx.fillText("Poster Template Loading...", canvas.width / 2, canvas.height / 2);  
+            ctx.fillText("Template not found: poster-template.png", canvas.width / 2, canvas.height / 2);  
         }  
 
         // User Photo Coordinates  
