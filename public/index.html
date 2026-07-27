@@ -315,12 +315,14 @@
             ctx.fillText("Please place poster-template.png in folder", canvas.width / 2, canvas.height / 2);  
         }  
 
-        // Photo: Base X (113) se left 35px badhaya (78), Base Y (883) se upar 15px badhaya (868). 
-        // Width ko left 35px + right 0px badhaya, Height ko upar 15px + neeche 20px badhaya.
-        let boxX = 78;   
-        let boxY = 868;  
-        let boxWidth = (272 - 113) + 35;   // 159 + 35 = 194
-        let boxHeight = (1061 - 883) + 15 + 20; // 178 + 35 = 213  
+        // Photo: Left position ko 35 pixel aur peeche (aur bada) kiya (78 - 35 = 43)
+        // Upar ki position ko 15 pixel aur upar kiya (868 - 15 = 853)
+        // Width: Original width + Left 35px + Right 35px = 159 + 70 = 229
+        // Height: Original height + Top 15px + Bottom 20px = 178 + 35 = 213
+        let boxX = 43;   
+        let boxY = 853;  
+        let boxWidth = (272 - 113) + 35 + 35;   
+        let boxHeight = (1061 - 883) + 15 + 20;  
 
         if (croppedImageObj) {  
             ctx.drawImage(croppedImageObj, boxX, boxY, boxWidth, boxHeight);  
@@ -376,7 +378,7 @@
                 }  
                 const image = document.getElementById('imageToCrop');  
                 cropper = new Cropper(image, {  
-                    aspectRatio: ((272 - 113) + 35) / ((1061 - 883) + 15 + 20),  
+                    aspectRatio: ((272 - 113) + 35 + 35) / ((1061 - 883) + 15 + 20),  
                     viewMode: 1,  
                     autoCropArea: 1,  
                 });  
@@ -402,7 +404,7 @@
     function cropAndSaveImage() {  
         if (cropper) {  
             const canvasCropped = cropper.getCroppedCanvas({  
-                width: (272 - 113) + 35,  
+                width: (272 - 113) + 35 + 35,  
                 height: (1061 - 883) + 15 + 20  
             });  
               
