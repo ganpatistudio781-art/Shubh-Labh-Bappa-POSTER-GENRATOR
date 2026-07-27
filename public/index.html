@@ -315,11 +315,11 @@
             ctx.fillText("Please place poster-template.png in folder", canvas.width / 2, canvas.height / 2);  
         }  
 
-        // Photo Coordinates + 200px Neeche
-        let boxX = 113;   
-        let boxY = 883 + 200;  
-        let boxWidth = 272 - 113;   // 159
-        let boxHeight = 1061 - 883; // 178  
+        // Photo: Left 20px bada (113 - 20 = 93), Top 20px upar + upar/neeche 30px bada ((1083 - 20) - 30 = 1033), Width 40px bada (159 + 40 = 199), Height 60px bada (178 + 60 = 238)
+        let boxX = 93;   
+        let boxY = 1033;  
+        let boxWidth = (272 - 113) + 40;   // 199
+        let boxHeight = (1061 - 883) + 60; // 238  
 
         if (croppedImageObj) {  
             ctx.drawImage(croppedImageObj, boxX, boxY, boxWidth, boxHeight);  
@@ -328,22 +328,22 @@
         const name = document.getElementById('userName').value;  
         const number = document.getElementById('userNumber').value;  
 
-        // Name: Thoda upar kiya (1310 se thoda kam karke 1290 kiya) aur size 6 badha diya (26 + 6 = 32px)
+        // Name: 5 pixel upar kiya (1290 - 5 = 1285)
         if (name) {  
             ctx.fillStyle = '#000000';  
             ctx.font = 'bold 32px Arial';  
             ctx.textAlign = 'left';  
             ctx.textBaseline = 'middle';  
-            ctx.fillText(name, 165, 1290);  
+            ctx.fillText(name, 165, 1285);  
         }  
 
-        // Mobile Number: 3 pixel upar kiya (1354 - 3 = 151) aur size bhi bada kiya (32px)
+        // Mobile Number: 2 pixel upar kiya (1351 - 2 = 1349)
         if (number) {  
             ctx.fillStyle = '#000000';  
             ctx.font = 'bold 32px Arial';  
             ctx.textAlign = 'left';  
             ctx.textBaseline = 'middle';  
-            ctx.fillText(number, 165, 1351);  
+            ctx.fillText(number, 165, 1349);  
         }  
     }  
 
@@ -375,7 +375,7 @@
                 }  
                 const image = document.getElementById('imageToCrop');  
                 cropper = new Cropper(image, {  
-                    aspectRatio: (272 - 113) / (1061 - 883),  
+                    aspectRatio: ((272 - 113) + 40) / ((1061 - 883) + 60),  
                     viewMode: 1,  
                     autoCropArea: 1,  
                 });  
@@ -401,12 +401,11 @@
     function cropAndSaveImage() {  
         if (cropper) {  
             const canvasCropped = cropper.getCroppedCanvas({  
-                width: 272 - 113,  
-                height: 1061 - 883  
+                width: (272 - 113) + 40,  
+                height: (1061 - 883) + 60  
             });  
               
             croppedImageObj = new Image();  
-            // Fixed the typo here from dataURL() to toDataURL() so crop & save works properly now
             croppedImageObj.src = canvasCropped.toDataURL();  
             croppedImageObj.onload = function() {  
                 updatePoster();  
