@@ -281,7 +281,6 @@
     const canvas = document.getElementById('posterCanvas');  
     const ctx = canvas.getContext('2d');  
 
-    // Set default canvas size immediately to prevent tiny canvas render  
     canvas.width = 1080;  
     canvas.height = 1350;  
 
@@ -329,20 +328,20 @@
         const name = document.getElementById('userName').value;  
         const number = document.getElementById('userNumber').value;  
 
-        // User Name Coordinates  
+        // User Name Coordinates (Neeche shift kiya gaya hai)  
         if (name) {  
             ctx.fillStyle = '#000000';  
             ctx.font = 'bold 32px Arial';  
             ctx.textAlign = 'left';  
-            ctx.fillText(name, 150, 915);  
+            ctx.fillText(name, 150, 960);  
         }  
 
-        // User Mobile Number Coordinates  
+        // User Mobile Number Coordinates (Neeche shift kiya gaya hai)  
         if (number) {  
             ctx.fillStyle = '#000000';  
             ctx.font = 'bold 30px Arial';  
             ctx.textAlign = 'left';  
-            ctx.fillText(number, 150, 985);  
+            ctx.fillText(number, 150, 1030);  
         }  
     }  
 
