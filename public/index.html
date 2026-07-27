@@ -315,7 +315,7 @@
             ctx.fillText("Please place poster-template.png in folder", canvas.width / 2, canvas.height / 2);  
         }  
 
-        // User Photo Coordinates  
+        // User Photo Coordinates (Aapke template ke white box ke mutabiq set ki gayi hai)  
         let boxX = 65;   
         let boxY = 490;  
         let boxWidth = 330;  
@@ -328,20 +328,20 @@
         const name = document.getElementById('userName').value;  
         const number = document.getElementById('userNumber').value;  
 
-        // User Name Coordinates (Neeche shift kiya gaya hai)  
+        // User Name Coordinates (Bilkul sahi white strip ke andar aligned)  
         if (name) {  
             ctx.fillStyle = '#000000';  
-            ctx.font = 'bold 32px Arial';  
+            ctx.font = 'bold 36px Arial';  
             ctx.textAlign = 'left';  
-            ctx.fillText(name, 150, 960);  
+            ctx.fillText(name, 195, 908);  
         }  
 
-        // User Mobile Number Coordinates (Neeche shift kiya gaya hai)  
+        // User Mobile Number Coordinates (Bilkul sahi white strip ke andar aligned)  
         if (number) {  
             ctx.fillStyle = '#000000';  
-            ctx.font = 'bold 30px Arial';  
+            ctx.font = 'bold 36px Arial';  
             ctx.textAlign = 'left';  
-            ctx.fillText(number, 150, 1030);  
+            ctx.fillText(number, 195, 983);  
         }  
     }  
 
