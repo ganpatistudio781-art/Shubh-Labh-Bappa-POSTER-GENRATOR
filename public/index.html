@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html>  
 <html lang="hi">  
 <head>  
     <meta charset="UTF-8">  
@@ -221,13 +221,13 @@
 
     <!-- 4. Inputs: Name, Number, Photo Upload & Generate Button -->  
     <div class="form-group">  
-        <label for="userName">Name:</label>  
-        <input type="text" id="userName" class="form-control" placeholder="write your name" oninput="updatePoster()">  
+        <label for="userName">Apna Naam:</label>  
+        <input type="text" id="userName" class="form-control" placeholder="Apna naam yahan likhein" oninput="updatePoster()">  
     </div>  
 
     <div class="form-group">  
         <label for="userNumber">Mobile Number:</label>  
-        <input type="tel" id="userNumber" class="form-control" placeholder="write your ph no" oninput="updatePoster()">  
+        <input type="tel" id="userNumber" class="form-control" placeholder="Apna mobile number likhein" oninput="updatePoster()">  
     </div>  
 
     <div class="form-group">  
@@ -244,8 +244,8 @@
 <div id="sourceModal" class="modal-overlay">  
     <div class="modal-box">  
         <h3>Photo Select Karein</h3>  
-        <button class="modal-btn camera" onclick="triggerCamera()">📸 Click from  camera </button>  
-        <button class="modal-btn gallery" onclick="triggerGallery()">🖼️ Choose from Gallery </button>  
+        <button class="modal-btn camera" onclick="triggerCamera()">📸 Camera se kheencho</button>  
+        <button class="modal-btn gallery" onclick="triggerGallery()">🖼️ Gallery se chuno</button>  
         <button class="modal-btn cancel" onclick="closeSourceModal()">Cancel</button>  
     </div>  
 </div>  
@@ -300,8 +300,8 @@
         updatePoster();  
     }  
 
-    // Updated template filename to poster-preview.png as requested
-    templateImg.src = 'poster-preview.png';  
+    // Load poster-template.png automatically  
+    templateImg.src = 'poster-template.png';  
 
     if (templateImg.complete) {  
         drawBaseCanvas();  
@@ -312,10 +312,13 @@
         if (templateImg.complete && templateImg.naturalWidth !== 0) {  
             ctx.drawImage(templateImg, 0, 0, canvas.width, canvas.height);  
         } else {  
+            canvas.width = 1080;  
+            canvas.height = 1350;  
             ctx.fillStyle = "#fff";  
             ctx.fillRect(0, 0, canvas.width, canvas.height);  
         }  
 
+        // Photo ke liye coordinates (Aap apne template ke hisaab se adjust kar sakte hain)  
         let boxX = 65;   
         let boxY = 490;  
         let boxWidth = 330;  
@@ -328,6 +331,7 @@
         const name = document.getElementById('userName').value;  
         const number = document.getElementById('userNumber').value;  
 
+        // Naam ke liye coordinates  
         if (name) {  
             ctx.fillStyle = '#000000';  
             ctx.font = 'bold 32px Arial';  
@@ -335,6 +339,7 @@
             ctx.fillText(name, 150, 915);  
         }  
 
+        // Mobile Number ke liye coordinates  
         if (number) {  
             ctx.fillStyle = '#000000';  
             ctx.font = 'bold 30px Arial';  
