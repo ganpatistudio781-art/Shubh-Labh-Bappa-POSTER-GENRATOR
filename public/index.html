@@ -300,10 +300,9 @@
         updatePoster();  
     }  
 
-    // Set source immediately to trigger loading on page start
+    // Load template image automatically
     templateImg.src = 'poster-template.png';  
 
-    // Ensure initial draw if already cached/loaded
     if (templateImg.complete) {  
         drawBaseCanvas();  
     }  
@@ -317,6 +316,7 @@
             ctx.fillRect(0, 0, canvas.width, canvas.height);  
         }  
 
+        // Rectangular Photo Box Coordinates
         let boxX = 65;   
         let boxY = 490;  
         let boxWidth = 330;  
@@ -329,6 +329,7 @@
         const name = document.getElementById('userName').value;  
         const number = document.getElementById('userNumber').value;  
 
+        // Draw Name inside white box
         if (name) {  
             ctx.fillStyle = '#000000';  
             ctx.font = 'bold 32px Arial';  
@@ -336,6 +337,7 @@
             ctx.fillText(name, 150, 915);  
         }  
 
+        // Draw Mobile Number inside white box
         if (number) {  
             ctx.fillStyle = '#000000';  
             ctx.font = 'bold 30px Arial';  
@@ -379,7 +381,7 @@
             };  
             reader.readAsDataURL(files[0]);  
         }  
-        event.target.value = '';  
+        event.target.value = '`';  
     }  
 
     function closeCropModal() {  
@@ -412,10 +414,18 @@
     }  
 
     function downloadPoster() {  
-        const link = document.createElement('a');  
-        link.download = 'shubh-labh-bappa-poster.png';  
-        link.href = canvas.toDataURL('image/png');  
-        link.click();  
+        // Yeh final poster ko naye tab mein khol dega ya download karega
+        const dataUrl = canvas.toDataURL('image/png');  
+        let newWindow = window.open();  
+        if (newWindow) {  
+            newWindow.document.write(`<title>Generated Poster</title><img src="${dataUrl}" style="max-width:100%; height:auto;" alt="Poster"/>`);  
+        } else {  
+            // Fallback direct download agar popup block ho toh
+            const link = document.createElement('a');  
+            link.download = 'shubh-labh-bappa-poster.png';  
+            link.href = dataUrl;  
+            link.click();  
+        }  
     }  
 </script>  
 
