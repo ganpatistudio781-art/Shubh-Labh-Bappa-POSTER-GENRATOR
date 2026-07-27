@@ -1,392 +1,461 @@
-/* ===========================
-   Poster Generator V2
-   CSS Part 1
-=========================== */
-
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:'Poppins',sans-serif;
+:root {
+    --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #311042 100%);
+    --panel-bg: rgba(255, 255, 255, 0.08);
+    --panel-border: rgba(255, 255, 255, 0.15);
+    --accent-color: #6366f1;
+    --accent-hover: #4f46e5;
+    --primary-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+    --text-primary: #ffffff;
+    --text-secondary: #94a3b8;
+    --radius-lg: 24px;
+    --radius-md: 16px;
+    --radius-sm: 12px;
 }
 
-body{
-    background:#eef2f7;
-    color:#222;
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    -webkit-tap-highlight-color: transparent;
 }
 
-.app{
-    max-width:520px;
-    margin:auto;
-    min-height:100vh;
-    padding:15px;
+body {
+    background: var(--bg-gradient);
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow-x: hidden;
 }
 
-.topBar{
-    text-align:center;
-    margin-bottom:20px;
+/* App Container */
+.app-container {
+    width: 100%;
+    max-width: 1200px;
+    min-height: 100vh;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
-.topBar h1{
-    font-size:30px;
-    font-weight:700;
-    color:#222;
+/* Header */
+.app-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
 }
 
-.topBar p{
-    margin-top:8px;
-    color:#666;
-    font-size:15px;
+.logo-badge {
+    width: 42px;
+    height: 42px;
+    background: var(--primary-gradient);
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
 }
 
-.previewCard,
-.editorCard{
-
-    background:#fff;
-
-    border-radius:22px;
-
-    padding:18px;
-
-    box-shadow:0 12px 35px rgba(0,0,0,.12);
-
-    margin-bottom:18px;
-
+.app-header h1 {
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
 }
 
-.posterPreview{
-
-    width:100%;
-
-    aspect-ratio:1080/1350;
-
-    overflow:hidden;
-
-    border-radius:18px;
-
-    background:#ddd;
-
+/* Workspace Grid */
+.workspace {
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: 24px;
+    align-items: start;
+    flex: 1;
 }
 
-#posterCanvas{
-
-    width:100%;
-
-    height:100%;
-
-    display:block;
-
+/* Canvas Preview Card */
+.preview-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.editorCard h2{
-
-    text-align:center;
-
-    margin-bottom:20px;
-
+.canvas-card {
+    position: relative;
+    background: var(--panel-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-lg);
+    padding: 16px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    max-width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.inputGroup{
-
-    margin-bottom:18px;
-
+#posterCanvas {
+    width: 100%;
+    max-width: 440px;
+    height: auto;
+    aspect-ratio: 1080 / 1350;
+    border-radius: var(--radius-md);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    display: block;
 }
 
-.inputGroup label{
-
-    display:block;
-
-    font-weight:600;
-
-    margin-bottom:8px;
-
+.live-tag {
+    position: absolute;
+    top: 28px;
+    right: 28px;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
-.inputGroup input{
-
-    width:100%;
-
-    height:50px;
-
-    border:2px solid #ddd;
-
-    border-radius:14px;
-
-    padding:0 15px;
-
-    font-size:16px;
-
-    outline:none;
-
-    transition:.25s;
-
+.pulse {
+    width: 8px;
+    height: 8px;
+    background: #10b981;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #10b981;
+    animation: blink 1.5s infinite;
 }
 
-.inputGroup input:focus{
-
-    border-color:#ff9800;
-
-    box-shadow:0 0 0 4px rgba(255,152,0,.15);
-
-}
-/* ===========================
-   Buttons
-=========================== */
-
-.buttonGroup{
-
-    display:flex;
-
-    flex-direction:column;
-
-    gap:15px;
-
-    margin-top:20px;
-
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
 }
 
-.primaryBtn,
-.generateBtn{
-
-    width:100%;
-
-    height:55px;
-
-    border:none;
-
-    border-radius:16px;
-
-    background:linear-gradient(135deg,#ff9800,#ff5722);
-
-    color:#fff;
-
-    font-size:17px;
-
-    font-weight:700;
-
-    cursor:pointer;
-
-    transition:.25s;
-
-    box-shadow:0 8px 20px rgba(255,87,34,.25);
-
+/* Glass Controls Card */
+.glass-card {
+    background: var(--panel-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
 }
 
-.primaryBtn:hover,
-.generateBtn:hover{
-
-    transform:translateY(-2px);
-
+.glass-card h2 {
+    font-size: 18px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text-primary);
 }
 
-.primaryBtn:active,
-.generateBtn:active{
-
-    transform:scale(.98);
-
+.form-group {
+    margin-bottom: 20px;
 }
 
-.downloadBtn{
-
-    display:none;
-
-    width:100%;
-
-    height:55px;
-
-    line-height:55px;
-
-    text-align:center;
-
-    text-decoration:none;
-
-    border-radius:16px;
-
-    background:linear-gradient(135deg,#16a34a,#22c55e);
-
-    color:#fff;
-
-    font-weight:700;
-
-    font-size:17px
-/* ===========================
-   Crop Modal
-=========================== */
-
-.cropModal{
-    position:fixed;
-    inset:0;
-    display:none;
-    justify-content:center;
-    align-items:center;
-    background:rgba(0,0,0,.75);
-    z-index:9999;
+.form-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
 }
 
-.cropContainer{
-    width:95%;
-    max-width:520px;
-    background:#fff;
-    border-radius:22px;
-    overflow:hidden;
-    animation:popup .25s ease;
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
 }
 
-.cropHeader{
-    padding:18px;
-    text-align:center;
-    border-bottom:1px solid #eee;
+.input-wrapper i {
+    position: absolute;
+    left: 16px;
+    color: var(--text-secondary);
+    font-size: 16px;
 }
 
-.cropHeader h2{
-    font-size:20px;
+.input-wrapper input {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px 14px 44px;
+    color: #fff;
+    font-size: 14px;
+    outline: none;
+    transition: all 0.3s ease;
 }
 
-.cropBody{
-    padding:15px;
-    background:#111;
+.input-wrapper input:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
 }
 
-#cropImage{
-    width:100%;
-    display:block;
-    max-height:60vh;
+/* Buttons */
+.btn {
+    border: none;
+    outline: none;
+    cursor: pointer;
+    font-weight: 600;
+    border-radius: var(--radius-sm);
+    padding: 14px 20px;
+    font-size: 15px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.cropTools{
-    display:grid;
-    grid-template-columns:repeat(5,1fr);
-    gap:10px;
-    padding:15px;
+.btn-block {
+    width: 100%;
 }
 
-.toolBtn{
-    height:46px;
-    border:none;
-    border-radius:12px;
-    background:#f4f4f4;
-    font-size:16px;
-    font-weight:600;
-    cursor:pointer;
+.btn-primary {
+    background: var(--primary-gradient);
+    color: #fff;
+    box-shadow: 0 10px 25px rgba(99, 102, 241, 0.3);
 }
 
-.cropActions{
-    display:flex;
-    gap:12px;
-    padding:0 15px 18px;
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 30px rgba(99, 102, 241, 0.5);
 }
 
-.cancelBtn,
-.doneBtn{
-    flex:1;
-    height:50px;
-    border:none;
-    border-radius:14px;
-    font-size:16px;
-    font-weight:700;
-    cursor:pointer;
+.btn-primary:active {
+    transform: translateY(0);
 }
 
-.cancelBtn{
-    background:#ef4444;
-    color:#fff;
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border: 1px solid var(--panel-border);
 }
 
-.doneBtn{
-    background:#16a34a;
-    color:#fff;
+.btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.18);
 }
 
-
-/* ===========================
-   Loader
-=========================== */
-
-.loader{
-    position:fixed;
-    inset:0;
-    display:none;
-    justify-content:center;
-    align-items:center;
-    background:rgba(255,255,255,.85);
-    z-index:10000;
+/* Bottom Sheet Modal */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px);
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
 }
 
-.loaderBox{
-    background:#fff;
-    padding:25px;
-    border-radius:18px;
-    text-align:center;
-    box-shadow:0 10px 30px rgba(0,0,0,.15);
+.modal-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
 }
 
-.spinner{
-    width:55px;
-    height:55px;
-    border:5px solid #eee;
-    border-top-color:#ff7a00;
-    border-radius:50%;
-    margin:auto;
-    animation:spin 1s linear infinite;
+.bottom-sheet {
+    background: #1e1b4b;
+    border-top: 1px solid var(--panel-border);
+    border-radius: 28px 28px 0 0;
+    padding: 24px;
+    width: 100%;
+    max-width: 500px;
+    transform: translateY(100%);
+    transition: transform 0.3s cubic-bezier(0.1, 1, 0.1, 1);
 }
 
-.loaderBox p{
-    margin-top:15px;
-    font-weight:600;
+.modal-overlay.active .bottom-sheet {
+    transform: translateY(0);
 }
 
-
-/* ===========================
-   Footer
-=========================== */
-
-footer{
-    text-align:center;
-    padding:20px;
-    color:#777;
-    font-size:14px;
+.sheet-handle {
+    width: 40px;
+    height: 5px;
+    background: rgba(255,255,255,0.3);
+    border-radius: 10px;
+    margin: 0 auto 16px;
 }
 
+.bottom-sheet h3 {
+    text-align: center;
+    font-size: 18px;
+    margin-bottom: 20px;
+}
 
-/* ===========================
-   Animations
-=========================== */
+.sheet-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
 
-@keyframes spin{
-    to{
-        transform:rotate(360deg);
+.sheet-btn {
+    width: 100%;
+    padding: 16px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-sm);
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    cursor: pointer;
+}
+
+.sheet-btn.btn-cancel {
+    background: transparent;
+    border: none;
+    color: #ef4444;
+}
+
+/* Fullscreen Crop Modal */
+.crop-modal {
+    position: fixed;
+    inset: 0;
+    background: #000;
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.crop-modal.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.crop-header {
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #0f172a;
+}
+
+.btn-icon {
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 22px;
+    cursor: pointer;
+}
+
+.crop-body {
+    flex: 1;
+    position: relative;
+    background: #000;
+    overflow: hidden;
+}
+
+.crop-container {
+    width: 100%;
+    height: 100%;
+}
+
+.crop-container img {
+    max-width: 100%;
+    display: block;
+}
+
+.crop-toolbar {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    padding: 14px;
+    background: #0f172a;
+}
+
+.tool-btn {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: #fff;
+    padding: 10px 16px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.crop-footer {
+    padding: 16px;
+    background: #0f172a;
+}
+
+/* Loading Overlay */
+.loading-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(12px);
+    z-index: 3000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.loading-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.spinner-card {
+    background: #1e1b4b;
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+
+.spinner {
+    width: 48px;
+    height: 48px;
+    border: 4px solid rgba(255, 255, 255, 0.1);
+    border-left-color: var(--accent-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Responsive Media Queries */
+@media (max-width: 900px) {
+    .workspace {
+        grid-template-columns: 1fr;
     }
-}
-
-@keyframes popup{
-    from{
-        opacity:0;
-        transform:scale(.9);
-    }
-    to{
-        opacity:1;
-        transform:scale(1);
-    }
-}
-
-
-/* ===========================
-   Responsive
-=========================== */
-
-@media(max-width:480px){
-
-    .topBar h1{
-        font-size:25px;
+    
+    .app-container {
+        padding: 12px;
     }
 
-    .previewCard,
-    .editorCard{
-        padding:15px;
+    .canvas-card {
+        padding: 10px;
     }
 
-    .cropTools{
-        grid-template-columns:repeat(3,1fr);
+    #posterCanvas {
+        max-width: 100%;
     }
-
 }
