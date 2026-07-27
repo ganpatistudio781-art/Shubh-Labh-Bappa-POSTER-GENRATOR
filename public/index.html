@@ -211,7 +211,7 @@
         📺 Subscribe YouTube Channel  
     </a>  
 
-    <!-- 3. Poster Preview Section (Template pre-loaded) -->  
+    <!-- 3. Poster Preview Section -->  
     <div class="poster-section">  
         <div class="section-title">Preview Poster</div>  
         <div class="poster-preview">  
@@ -232,9 +232,7 @@
 
     <div class="form-group">  
         <label>Photo Upload:</label>  
-        <!-- Clicking this opens Camera/Gallery Choice Popup -->  
         <button type="button" class="form-control" onclick="openSourceModal()" style="background:#f8f9fa; text-align:left; color:#555;">📷 Choose Camera or Gallery</button>  
-        <!-- Hidden file inputs for Camera and Gallery -->  
         <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display:none;" onchange="handleFileSelect(event)">  
         <input type="file" id="galleryInput" accept="image/*" style="display:none;" onchange="handleFileSelect(event)">  
     </div>  
@@ -259,7 +257,6 @@
         <div class="crop-container">  
             <img id="imageToCrop" src="">  
         </div>  
-        <!-- Zoom & Rotate Controls -->  
         <div class="crop-tools">  
             <button class="tool-btn" onclick="zoomIn()">🔍+</button>  
             <button class="tool-btn" onclick="zoomOut()">🔍-</button>  
@@ -277,80 +274,66 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>  
 <script>  
     let templateImg = new Image();  
-    templateImg.src = 'poster-template.png'; // Aapki template image ka path  
+    templateImg.src = 'poster-template.png';  
     let croppedImageObj = null;  
     let cropper = null;  
 
     const canvas = document.getElementById('posterCanvas');  
     const ctx = canvas.getContext('2d');  
 
-    // Load template and draw initially  
     templateImg.onload = function() {  
-        canvas.width = templateImg.naturalWidth || 800;  
-        canvas.height = templateImg.naturalHeight || 1000;  
+        canvas.width = templateImg.naturalWidth || 1080;  
+        canvas.height = templateImg.naturalHeight || 1350;  
         updatePoster();  
     };  
 
-    // Fallback agar image load hone mein issue aaye  
     templateImg.onerror = function() {  
-        canvas.width = 800;  
-        canvas.height = 1000;  
+        canvas.width = 1080;  
+        canvas.height = 1350;  
         ctx.fillStyle = "#fff";  
         ctx.fillRect(0, 0, canvas.width, canvas.height);  
         updatePoster();  
     }  
 
     function updatePoster() {  
-        // Clear canvas & draw template background  
         ctx.clearRect(0, 0, canvas.width, canvas.height);  
         if (templateImg.complete && templateImg.naturalWidth !== 0) {  
             ctx.drawImage(templateImg, 0, 0, canvas.width, canvas.height);  
         }  
 
-        // Draw Cropped User Photo if available (Coordinates ko apne template ke hisaab se adjust kar sakte hain)  
-        if (croppedImageObj) {  
-            ctx.save();  
-            ctx.beginPath();  
-            let centerX = canvas.width / 2;  
-            let centerY = 300;  // Yahan aap photo ki position change kar sakte hain  
-            let radius = 120;  // Yahan photo ka size change kar sakte hain  
-              
-            ctx.arc(centerX, centerY, radius, 0, Math.PI * 2, true);  
-            ctx.closePath();  
-            ctx.clip();  
-            ctx.drawImage(croppedImageObj, centerX - radius, centerY - radius, radius * 2, radius * 2);  
-            ctx.restore();  
+        // 1. Template ke rectangular photo box ke mutabiq coordinates 
+        // (Agar aapke template mein photo box ki position thodi aage-piche ho, toh aap in numbers ko adjust kar sakte hain)
+        let boxX = 65;   
+        let boxY = 490;  
+        let boxWidth = 330;  
+        let boxHeight = 360;  
 
-            // Photo border  
-            ctx.strokeStyle = '#ff9933';  
-            ctx.lineWidth = 6;  
-            ctx.beginPath();  
-            ctx.arc(centerX, centerY, radius, 0, Math.PI * 2, true);  
-            ctx.stroke();  
+        // Draw User Photo inside the rectangular box
+        if (croppedImageObj) {  
+            ctx.drawImage(croppedImageObj, boxX, boxY, boxWidth, boxHeight);  
         }  
 
         // Get user inputs  
         const name = document.getElementById('userName').value;  
         const number = document.getElementById('userNumber').value;  
 
-        // Draw User Name  
+        // 2. Draw Name inside the bottom-left name box
         if (name) {  
             ctx.fillStyle = '#000000';  
-            ctx.font = 'bold 36px Arial';  
-            ctx.textAlign = 'center';  
-            ctx.fillText(name, canvas.width / 2, 480); // Naam ki position  
+            ctx.font = 'bold 32px Arial';  
+            ctx.textAlign = 'left';  
+            ctx.fillText(name, 150, 915); // Naam ki position white box ke andar  
         }  
 
-        // Draw User Mobile Number  
+        // 3. Draw Mobile Number inside the bottom-left number box
         if (number) {  
-            ctx.fillStyle = '#333333';  
-            ctx.font = '28px Arial';  
-            ctx.textAlign = 'center';  
-            ctx.fillText('Mob: ' + number, canvas.width / 2, 530); // Number ki position  
+            ctx.fillStyle = '#000000';  
+            ctx.font = 'bold 30px Arial';  
+            ctx.textAlign = 'left';  
+            ctx.fillText(number, 150, 985); // Number ki position white box ke andar  
         }  
     }  
 
-    // First Popup Control (Camera / Gallery Choice)  
     function openSourceModal() {  
         document.getElementById('sourceModal').style.display = 'flex';  
     }  
@@ -366,7 +349,6 @@
         document.getElementById('galleryInput').click();  
     }  
 
-    // Handle File Selection and open Crop Popup  
     function handleFileSelect(event) {  
         const files = event.target.files;  
         if (files && files.length > 0) {  
@@ -380,17 +362,16 @@
                 }  
                 const image = document.getElementById('imageToCrop');  
                 cropper = new Cropper(image, {  
-                    aspectRatio: 1, // Square frame for round crop  
+                    aspectRatio: 330 / 360, // Template ke photo box ka aspect ratio  
                     viewMode: 1,  
-                    autoCropArea: 0.8,  
+                    autoCropArea: 1,  
                 });  
             };  
             reader.readAsDataURL(files[0]);  
         }  
-        event.target.value = ''; // Reset input  
+        event.target.value = '';  
     }  
 
-    // Close Crop Modal  
     function closeCropModal() {  
         document.getElementById('cropModal').style.display = 'none';  
         if (cropper) {  
@@ -399,18 +380,16 @@
         }  
     }  
 
-    // Zoom & Rotate Helper Functions  
     function zoomIn() { if (cropper) cropper.zoom(0.1); }  
     function zoomOut() { if (cropper) cropper.zoom(-0.1); }  
     function rotateLeft() { if (cropper) cropper.rotate(-90); }  
     function rotateRight() { if (cropper) cropper.rotate(90); }  
 
-    // Crop and Save Image to Canvas  
     function cropAndSaveImage() {  
         if (cropper) {  
             const canvasCropped = cropper.getCroppedCanvas({  
-                width: 400,  
-                height: 400  
+                width: 330,  
+                height: 360  
             });  
               
             croppedImageObj = new Image();  
@@ -422,7 +401,6 @@
         }  
     }  
 
-    // Download Final Poster  
     function downloadPoster() {  
         const link = document.createElement('a');  
         link.download = 'shubh-labh-bappa-poster.png';  
