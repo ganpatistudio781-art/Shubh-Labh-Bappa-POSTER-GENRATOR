@@ -61,19 +61,23 @@
             font-weight: 600;  
             margin-bottom: 10px;  
             color: #444;  
-.poster-preview {
-    width: 100%;
-    background: #ffffff;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0,0,0,.15);
-}
-
-#posterCanvas {
-    width: 100%;
-    height: auto;
-    display: block;
-}
+        }  
+        .poster-preview {  
+            width: 100%;  
+            background: #f0f0f0;  
+            border: 2px dashed #ccc;  
+            border-radius: 8px;  
+            overflow: hidden;  
+            position: relative;  
+            display: flex;  
+            justify-content: center;  
+            align-items: center;  
+        }  
+        #posterCanvas {  
+            width: 100%;  
+            height: auto;  
+            display: block;  
+            border-radius: 8px;  
         }  
         .form-group {  
             margin-bottom: 15px;  
@@ -217,13 +221,13 @@
 
     <!-- 4. Inputs: Name, Number, Photo Upload & Generate Button -->  
     <div class="form-group">  
-        <label for="userName">your name:</label>  
-        <input type="text" id="userName" class="form-control" placeholder="write your name" oninput="updatePoster()">  
+        <label for="userName">Apna Naam:</label>  
+        <input type="text" id="userName" class="form-control" placeholder="Apna naam yahan likhein" oninput="updatePoster()">  
     </div>  
 
     <div class="form-group">  
         <label for="userNumber">Mobile Number:</label>  
-        <input type="tel" id="userNumber" class="form-control" placeholder="write your ph number" oninput="updatePoster()">  
+        <input type="tel" id="userNumber" class="form-control" placeholder="Apna mobile number likhein" oninput="updatePoster()">  
     </div>  
 
     <div class="form-group">  
@@ -239,9 +243,9 @@
 <!-- Popup 1: Choose Camera or Gallery -->  
 <div id="sourceModal" class="modal-overlay">  
     <div class="modal-box">  
-        <h3> select photo </h3>  
-        <button class="modal-btn camera" onclick="triggerCamera()">📸 click from Camera </button>  
-        <button class="modal-btn gallery" onclick="triggerGallery()">🖼️ choose from Gallery </button>  
+        <h3>Photo Select Karein</h3>  
+        <button class="modal-btn camera" onclick="triggerCamera()">📸 Camera se kheencho</button>  
+        <button class="modal-btn gallery" onclick="triggerGallery()">🖼️ Gallery se chuno</button>  
         <button class="modal-btn cancel" onclick="closeSourceModal()">Cancel</button>  
     </div>  
 </div>  
@@ -270,17 +274,22 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>  
 <script>  
     let templateImg = new Image();  
-    templateImg.src = 'poster-template.png';  
     let croppedImageObj = null;  
     let cropper = null;  
 
     const canvas = document.getElementById('posterCanvas');  
     const ctx = canvas.getContext('2d');  
 
+    function drawBaseCanvas() {  
+        if (templateImg.complete && templateImg.naturalWidth !== 0) {  
+            canvas.width = templateImg.naturalWidth;  
+            canvas.height = templateImg.naturalHeight;  
+            updatePoster();  
+        }  
+    }  
+
     templateImg.onload = function() {  
-        canvas.width = templateImg.naturalWidth || 1080;  
-        canvas.height = templateImg.naturalHeight || 1350;  
-        updatePoster();  
+        drawBaseCanvas();  
     };  
 
     templateImg.onerror = function() {  
@@ -291,42 +300,47 @@
         updatePoster();  
     }  
 
+    // Set source immediately to trigger loading on page start
+    templateImg.src = 'poster-template.png';  
+
+    // Ensure initial draw if already cached/loaded
+    if (templateImg.complete) {  
+        drawBaseCanvas();  
+    }  
+
     function updatePoster() {  
         ctx.clearRect(0, 0, canvas.width, canvas.height);  
         if (templateImg.complete && templateImg.naturalWidth !== 0) {  
             ctx.drawImage(templateImg, 0, 0, canvas.width, canvas.height);  
+        } else {  
+            ctx.fillStyle = "#fff";  
+            ctx.fillRect(0, 0, canvas.width, canvas.height);  
         }  
 
-        // 1. Template ke rectangular photo box ke mutabiq coordinates 
-        // (Agar aapke template mein photo box ki position thodi aage-piche ho, toh aap in numbers ko adjust kar sakte hain)
         let boxX = 65;   
         let boxY = 490;  
         let boxWidth = 330;  
         let boxHeight = 360;  
 
-        // Draw User Photo inside the rectangular box
         if (croppedImageObj) {  
             ctx.drawImage(croppedImageObj, boxX, boxY, boxWidth, boxHeight);  
         }  
 
-        // Get user inputs  
         const name = document.getElementById('userName').value;  
         const number = document.getElementById('userNumber').value;  
 
-        // 2. Draw Name inside the bottom-left name box
         if (name) {  
             ctx.fillStyle = '#000000';  
             ctx.font = 'bold 32px Arial';  
             ctx.textAlign = 'left';  
-            ctx.fillText(name, 150, 915); // Naam ki position white box ke andar  
+            ctx.fillText(name, 150, 915);  
         }  
 
-        // 3. Draw Mobile Number inside the bottom-left number box
         if (number) {  
             ctx.fillStyle = '#000000';  
             ctx.font = 'bold 30px Arial';  
             ctx.textAlign = 'left';  
-            ctx.fillText(number, 150, 985); // Number ki position white box ke andar  
+            ctx.fillText(number, 150, 985);  
         }  
     }  
 
@@ -358,7 +372,7 @@
                 }  
                 const image = document.getElementById('imageToCrop');  
                 cropper = new Cropper(image, {  
-                    aspectRatio: 330 / 360, // Template ke photo box ka aspect ratio  
+                    aspectRatio: 330 / 360,  
                     viewMode: 1,  
                     autoCropArea: 1,  
                 });  
