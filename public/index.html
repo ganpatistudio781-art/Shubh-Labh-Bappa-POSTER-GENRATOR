@@ -315,11 +315,14 @@
             ctx.fillText("Please place poster-template.png in folder", canvas.width / 2, canvas.height / 2);  
         }  
 
-        // Photo: Pichli width 235 thi, usme 20 pixel aur jodkar right side se extend kar diya (235 + 20 = 255)
+        // Photo size updated: 
+        // Y 5 pixel upar kiya (823 - 5 = 818)
+        // Height 10 pixel badhayi (330 + 10 = 340) -> isse upar aur neeche dono taraf 5-5 pixel badh gaya
+        // Width 20 pixel right side badhayi (235 + 20 = 255)
         let boxX = 70;   
-        let boxY = 823;  
+        let boxY = 818;  
         let boxWidth = 255;   
-        let boxHeight = 330;  
+        let boxHeight = 340;  
 
         if (croppedImageObj) {  
             ctx.drawImage(croppedImageObj, boxX, boxY, boxWidth, boxHeight);  
@@ -375,7 +378,7 @@
                 }  
                 const image = document.getElementById('imageToCrop');  
                 cropper = new Cropper(image, {  
-                    aspectRatio: 255 / 330,  // Updated aspect ratio matching new boxWidth / boxHeight
+                    aspectRatio: 255 / 340,  // Updated aspect ratio matching new boxWidth / boxHeight
                     viewMode: 1,  
                     autoCropArea: 1,  
                 });  
@@ -402,7 +405,7 @@
         if (cropper) {  
             const canvasCropped = cropper.getCroppedCanvas({  
                 width: 255,  
-                height: 330  
+                height: 340  
             });  
               
             croppedImageObj = new Image();  
