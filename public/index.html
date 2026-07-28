@@ -315,14 +315,11 @@
             ctx.fillText("Please place poster-template.png in folder", canvas.width / 2, canvas.height / 2);  
         }  
 
-        // =====================================================
-        // === PHOTO BOX VALUES (Yahan se khud change kar lena) ===
-        // =====================================================
-        let boxX = 71;      // Left position (X)
-        let boxY = 780;     // Top position (Y)
-        let boxWidth = 350; // Width (Chodaai)
-        let boxHeight = 370;// Height (Oonchai)
-        // =====================================================
+        // Photo Box: Upar se 5px upar (818), Neeche se 5px aur lamba (340 height), Right se 20px aur choda (255 width)
+        let boxX = 70;   
+        let boxY = 818;  
+        let boxWidth = 300;   
+        let boxHeight = 360;  
 
         if (croppedImageObj) {  
             ctx.drawImage(croppedImageObj, boxX, boxY, boxWidth, boxHeight);  
@@ -378,7 +375,7 @@
                 }  
                 const image = document.getElementById('imageToCrop');  
                 cropper = new Cropper(image, {  
-                    aspectRatio: 380 /380,  
+                    aspectRatio: 255 / 340,  
                     viewMode: 1,  
                     autoCropArea: 1,  
                 });  
@@ -404,8 +401,8 @@
     function cropAndSaveImage() {  
         if (cropper) {  
             const canvasCropped = cropper.getCroppedCanvas({  
-                width: 380,  
-                height: 380  
+                width: 255,  
+                height: 340  
             });  
               
             croppedImageObj = new Image();  
