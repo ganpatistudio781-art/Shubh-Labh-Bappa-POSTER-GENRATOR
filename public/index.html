@@ -316,16 +316,12 @@
         }  
 
         // =====================================================
-        // === PHOTO BOX VALUES (Yahan se khud change kar lena) ===
+        // === PHOTO BOX VALUES ===
         // =====================================================
-        // Original (310x362) - Reference ke liye:
-        // let boxX = 70; let boxY = 774; let boxWidth = 310; let boxHeight = 362;
-        
-        // Updated (Bilkul halka sa chhota - 2px kam kiya):
-        let boxX = 71;       // Centre maintain karne ke liye 1px right kiya
-        let boxY = 775;      // Centre maintain karne ke liye 1px neeche kiya
-        let boxWidth = 308;  // Width 310 se 308 ki
-        let boxHeight = 360; // Height 362 se 360 ki
+        let boxX = 71;       
+        let boxY = 775;      
+        let boxWidth = 308;  
+        let boxHeight = 360; 
         // =====================================================
 
         if (croppedImageObj) {  
@@ -335,7 +331,7 @@
         const name = document.getElementById('userName').value;  
         const number = document.getElementById('userNumber').value;  
 
-        // Name: Fixed Position (Bilkul halka sa neeche shift kiya - 1200 se 1202)
+        // Name: Fixed Position
         if (name) {  
             ctx.fillStyle = '#000000';  
             ctx.font = 'bold 36px Arial';  
@@ -344,7 +340,7 @@
             ctx.fillText(name, 169, 1202);  
         }  
 
-        // Mobile Number: Fixed Position (Bhi halka sa neeche - 1281 se 1283)
+        // Mobile Number: Fixed Position
         if (number) {  
             ctx.fillStyle = '#000000';  
             ctx.font = 'bold 36px Arial';  
@@ -374,4 +370,66 @@
         if (files && files.length > 0) {  
             const reader = new FileReader();  
             reader.onload = function(e) {  
-                document.getElementById('imageToCrop').src = e.target.result;
+                document.getElementById('imageToCrop').src = e.target.result;  
+                document.getElementById('cropModal').style.display = 'flex';  
+                  
+                if (cropper) {  
+                    cropper.destroy();  
+                }  
+                const image = document.getElementById('imageToCrop');  
+                cropper = new Cropper(image, {  
+                    aspectRatio: 308 / 360,  
+                    viewMode: 1,  
+                    autoCropArea: 1,  
+                });  
+            };  
+            reader.readAsDataURL(files[0]);  
+        }  
+        event.target.value = '';  
+    }  
+
+    function closeCropModal() {  
+        document.getElementById('cropModal').style.display = 'none';  
+        if (cropper) {  
+            cropper.destroy();  
+            cropper = null;  
+        }  
+    }  
+
+    function zoomIn() { if (cropper) cropper.zoom(0.1); }  
+    function zoomOut() { if (cropper) cropper.zoom(-0.1); }  
+    function rotateLeft() { if (cropper) cropper.rotate(-90); }  
+    function rotateRight() { if (cropper) cropper.rotate(90); }  
+
+    function cropAndSaveImage() {  
+        if (cropper) {  
+            const canvasCropped = cropper.getCroppedCanvas({  
+                width: 308,   
+                height: 360   
+            });  
+              
+            croppedImageObj = new Image();  
+            croppedImageObj.src = canvasCropped.toDataURL();  
+            croppedImageObj.onload = function() {  
+                updatePoster();  
+                closeCropModal();  
+            }  
+        }  
+    }  
+
+    function downloadPoster() {  
+        updatePoster();  
+        setTimeout(() => {  
+            const dataUrl = canvas.toDataURL('image/png');  
+            const link = document.createElement('a');  
+            link.download = 'shubh-labh-bappa-poster.png';  
+            link.href = dataUrl;  
+            document.body.appendChild(link);  
+            link.click();  
+            document.body.removeChild(link);  
+        }, 100);  
+    }  
+</script>  
+
+</body>  
+</html>
