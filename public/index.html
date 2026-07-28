@@ -316,9 +316,9 @@
         }  
 
         // =====================================================
-        // === PHOTO BOX VALUES (2px Left Shifted) ===
+        // === PHOTO BOX VALUES ===
         // =====================================================
-        let boxX = 69;       // 2px left (71 se 69 kiya)
+        let boxX = 69;       
         let boxY = 775;      
         let boxWidth = 308;  
         let boxHeight = 360; 
@@ -331,22 +331,22 @@
         const name = document.getElementById('userName').value;  
         const number = document.getElementById('userNumber').value;  
 
-        // Name: Fixed Position (3px Neeche - 1202 se 1205 kiya)
+        // Name: Fixed Position (Halka sa aur neeche - 1206 kiya)
         if (name) {  
             ctx.fillStyle = '#000000';  
             ctx.font = 'bold 36px Arial';  
             ctx.textAlign = 'left';  
             ctx.textBaseline = 'middle';  
-            ctx.fillText(name, 169, 1205);  
+            ctx.fillText(name, 168, 1208);  
         }  
 
-        // Mobile Number: Fixed Position (3px Neeche - 1283 se 1286 kiya)
+        // Mobile Number: Fixed Position
         if (number) {  
             ctx.fillStyle = '#000000';  
             ctx.font = 'bold 36px Arial';  
             ctx.textAlign = 'left';  
             ctx.textBaseline = 'middle';  
-            ctx.fillText(number, 169, 1286);  
+            ctx.fillText(number, 168, 1286);  
         }  
     }  
 
