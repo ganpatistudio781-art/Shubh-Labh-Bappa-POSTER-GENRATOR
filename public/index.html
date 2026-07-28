@@ -319,9 +319,9 @@
         // === PHOTO BOX VALUES (Yahan se khud change kar lena) ===
         // =====================================================
         let boxX = 70;      // Left position (X)
-        let boxY = 782;     // Top position (Y) - 8px neeche kiya (774 + 8 = 782)
-        let boxWidth = 310; // Width (Chodaai)
-        let boxHeight = 346;// Height (Oonchai) - 16px kam kiya (362 - 16 = 346)
+        let boxY = 774;     // Top position (Y) - 4px neeche kiya
+        let boxWidth = 305; // Width (Chodaai)
+        let boxHeight = 356;// Height (Oonchai) - 8px kam kiya (370 se 362)
         // =====================================================
 
         if (croppedImageObj) {  
@@ -331,22 +331,22 @@
         const name = document.getElementById('userName').value;  
         const number = document.getElementById('userNumber').value;  
 
-        // Name: Fixed Position (3px aur neeche shift kiya)
+        // Name: Fixed Position (Thoda neeche shift kiya)
         if (name) {  
             ctx.fillStyle = '#000000';  
             ctx.font = 'bold 36px Arial';  
             ctx.textAlign = 'left';  
             ctx.textBaseline = 'middle';  
-            ctx.fillText(name, 169, 1203);  // 1200 + 3 = 1203
+            ctx.fillText(name, 166, 1204);  
         }  
 
-        // Mobile Number: Fixed Position (3px aur neeche shift kiya)
+        // Mobile Number: Fixed Position (Thoda neeche shift kiya)
         if (number) {  
             ctx.fillStyle = '#000000';  
             ctx.font = 'bold 36px Arial';  
             ctx.textAlign = 'left';  
             ctx.textBaseline = 'middle';  
-            ctx.fillText(number, 169, 1284);  // 1281 + 3 = 1284
+            ctx.fillText(number, 166, 1285);  
         }  
     }  
 
@@ -371,4 +371,65 @@
             const reader = new FileReader();  
             reader.onload = function(e) {  
                 document.getElementById('imageToCrop').src = e.target.result;  
-                document.getElementById('cropModal').style
+                document.getElementById('cropModal').style.display = 'flex';  
+                  
+                if (cropper) {  
+                    cropper.destroy();  
+                }  
+                const image = document.getElementById('imageToCrop');  
+                cropper = new Cropper(image, {  
+                    aspectRatio: 305 / 356,  // Updated aspect ratio matching new boxWidth / boxHeight
+                    viewMode: 1,  
+                    autoCropArea: 1,  
+                });  
+            };  
+            reader.readAsDataURL(files[0]);  
+        }  
+        event.target.value = '';  
+    }  
+
+    function closeCropModal() {  
+        document.getElementById('cropModal').style.display = 'none';  
+        if (cropper) {  
+            cropper.destroy();  
+            cropper = null;  
+        }  
+    }  
+
+    function zoomIn() { if (cropper) cropper.zoom(0.1); }  
+    function zoomOut() { if (cropper) cropper.zoom(-0.1); }  
+    function rotateLeft() { if (cropper) cropper.rotate(-90); }  
+    function rotateRight() { if (cropper) cropper.rotate(90); }  
+
+    function cropAndSaveImage() {  
+        if (cropper) {  
+            const canvasCropped = cropper.getCroppedCanvas({  
+                width: 305,   // Updated width
+                height: 356   // Updated height
+            });  
+              
+            croppedImageObj = new Image();  
+            croppedImageObj.src = canvasCropped.toDataURL();  
+            croppedImageObj.onload = function() {  
+                updatePoster();  
+                closeCropModal();  
+            }  
+        }  
+    }  
+
+    function downloadPoster() {  
+        updatePoster();  
+        setTimeout(() => {  
+            const dataUrl = canvas.toDataURL('image/png');  
+            const link = document.createElement('a');  
+            link.download = 'shubh-labh-bappa-poster.png';  
+            link.href = dataUrl;  
+            document.body.appendChild(link);  
+            link.click();  
+            document.body.removeChild(link);  
+        }, 100);  
+    }  
+</script>  
+
+</body>  
+</html>
