@@ -320,7 +320,7 @@
         // =====================================================
         let boxX = 80;      // Left position (X)
         let boxY = 780;     // Top position (Y)
-        let boxWidth = 410; // Width (Chodaai)
+        let boxWidth = 375; // Width (Chodaai)
         let boxHeight = 350;// Height (Oonchai)
         // =====================================================
 
@@ -378,7 +378,7 @@
                 }  
                 const image = document.getElementById('imageToCrop');  
                 cropper = new Cropper(image, {  
-                    aspectRatio: 300 / 400,  
+                    aspectRatio: 375 / 350,  
                     viewMode: 1,  
                     autoCropArea: 1,  
                 });  
@@ -404,8 +404,8 @@
     function cropAndSaveImage() {  
         if (cropper) {  
             const canvasCropped = cropper.getCroppedCanvas({  
-                width: 300,  
-                height: 400  
+                width: 375,  
+                height: 350  
             });  
               
             croppedImageObj = new Image();  
