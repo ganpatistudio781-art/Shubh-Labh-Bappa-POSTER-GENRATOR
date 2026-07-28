@@ -319,9 +319,9 @@
         // === PHOTO BOX VALUES (Yahan se khud change kar lena) ===
         // =====================================================
         let boxX = 70;      // Left position (X)
-        let boxY = 770;     // Top position (Y) - Upar shift kiya
+        let boxY = 774;     // Top position (Y) - 4px neeche kiya
         let boxWidth = 310; // Width (Chodaai)
-        let boxHeight = 370;// Height (Oonchai)
+        let boxHeight = 362;// Height (Oonchai) - 8px kam kiya (370 se 362)
         // =====================================================
 
         if (croppedImageObj) {  
@@ -331,22 +331,22 @@
         const name = document.getElementById('userName').value;  
         const number = document.getElementById('userNumber').value;  
 
-        // Name: Fixed Position (Upar shift kiya gaya hai)
+        // Name: Fixed Position (Thoda neeche shift kiya)
         if (name) {  
             ctx.fillStyle = '#000000';  
             ctx.font = 'bold 36px Arial';  
             ctx.textAlign = 'left';  
             ctx.textBaseline = 'middle';  
-            ctx.fillText(name, 169, 1160);  
+            ctx.fillText(name, 169, 1200);  
         }  
 
-        // Mobile Number: Fixed Position (Upar shift kiya gaya hai)
+        // Mobile Number: Fixed Position (Thoda neeche shift kiya)
         if (number) {  
             ctx.fillStyle = '#000000';  
             ctx.font = 'bold 36px Arial';  
             ctx.textAlign = 'left';  
             ctx.textBaseline = 'middle';  
-            ctx.fillText(number, 169, 1241);  
+            ctx.fillText(number, 169, 1281);  
         }  
     }  
 
@@ -378,7 +378,7 @@
                 }  
                 const image = document.getElementById('imageToCrop');  
                 cropper = new Cropper(image, {  
-                    aspectRatio: 310 / 370,  // Updated aspect ratio matching new boxWidth / boxHeight
+                    aspectRatio: 310 / 362,  // Updated aspect ratio matching new boxWidth / boxHeight
                     viewMode: 1,  
                     autoCropArea: 1,  
                 });  
@@ -405,7 +405,7 @@
         if (cropper) {  
             const canvasCropped = cropper.getCroppedCanvas({  
                 width: 310,   // Updated width
-                height: 370   // Updated height
+                height: 362   // Updated height
             });  
               
             croppedImageObj = new Image();  
