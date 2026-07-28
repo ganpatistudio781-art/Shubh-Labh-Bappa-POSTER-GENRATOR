@@ -321,7 +321,7 @@
         let boxX = 70;      // Left position (X)
         let boxY = 774;     // Top position (Y) - 4px neeche kiya
         let boxWidth = 305; // Width (Chodaai)
-        let boxHeight = 356;// Height (Oonchai) - 8px kam kiya (370 se 362)
+        let boxHeight = 350;// Height (Oonchai) - 8px kam kiya (370 se 362)
         // =====================================================
 
         if (croppedImageObj) {  
@@ -337,7 +337,7 @@
             ctx.font = 'bold 36px Arial';  
             ctx.textAlign = 'left';  
             ctx.textBaseline = 'middle';  
-            ctx.fillText(name, 166, 1204);  
+            ctx.fillText(name, 166, 1203);  
         }  
 
         // Mobile Number: Fixed Position (Thoda neeche shift kiya)
@@ -378,7 +378,7 @@
                 }  
                 const image = document.getElementById('imageToCrop');  
                 cropper = new Cropper(image, {  
-                    aspectRatio: 305 / 356,  // Updated aspect ratio matching new boxWidth / boxHeight
+                    aspectRatio: 305 / 350,  // Updated aspect ratio matching new boxWidth / boxHeight
                     viewMode: 1,  
                     autoCropArea: 1,  
                 });  
@@ -405,7 +405,7 @@
         if (cropper) {  
             const canvasCropped = cropper.getCroppedCanvas({  
                 width: 305,   // Updated width
-                height: 356   // Updated height
+                height: 350   // Updated height
             });  
               
             croppedImageObj = new Image();  
