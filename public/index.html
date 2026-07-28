@@ -318,10 +318,10 @@
         // =====================================================
         // === PHOTO BOX VALUES (Yahan se khud change kar lena) ===
         // =====================================================
-        let boxX = 78;      // Left position (X)
-        let boxY = 810;     // Top position (Y)
-        let boxWidth = 245; // Width (Chodaai)
-        let boxHeight = 305;// Height (Oonchai)
+        let boxX = 88;      // Left position (X)
+        let boxY = 822;     // Top position (Y)
+        let boxWidth = 228; // Width (Chodaai)
+        let boxHeight = 300;// Height (Oonchai)
         // =====================================================
 
         if (croppedImageObj) {  
@@ -378,7 +378,7 @@
                 }  
                 const image = document.getElementById('imageToCrop');  
                 cropper = new Cropper(image, {  
-                    aspectRatio: 245 /305,  
+                    aspectRatio: 228 /300,  
                     viewMode: 1,  
                     autoCropArea: 1,  
                 });  
@@ -404,8 +404,8 @@
     function cropAndSaveImage() {  
         if (cropper) {  
             const canvasCropped = cropper.getCroppedCanvas({  
-                width: 245,  
-                height: 305  
+                width: 228,  
+                height: 300  
             });  
               
             croppedImageObj = new Image();  
