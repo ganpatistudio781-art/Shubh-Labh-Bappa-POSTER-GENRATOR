@@ -222,7 +222,7 @@
 
     <!-- 4. Inputs with Name & Number Placeholders -->  
     <div class="form-group">  
-        <label for="userName">your  Naam:</label>  
+        <label for="userName">Apna Naam:</label>  
         <input type="text" id="userName" class="form-control" placeholder="Name" oninput="updatePoster()">  
     </div>  
 
@@ -245,8 +245,8 @@
 <div id="sourceModal" class="modal-overlay">  
     <div class="modal-box">  
         <h3>Photo Select Karein</h3>  
-        <button class="modal-btn camera" onclick="triggerCamera()">📸 Click from Camera </button>  
-        <button class="modal-btn gallery" onclick="triggerGallery()">🖼️ Choose from Gallery </button>  
+        <button class="modal-btn camera" onclick="triggerCamera()">📸 Camera se kheencho</button>  
+        <button class="modal-btn gallery" onclick="triggerGallery()">🖼️ Gallery se chuno</button>  
         <button class="modal-btn cancel" onclick="closeSourceModal()">Cancel</button>  
     </div>  
 </div>  
@@ -318,12 +318,12 @@
         }  
 
         // =====================================================
-        // === PHOTO BOX VALUES (Halka sa aur upar kiya) ===
+        // === PHOTO BOX VALUES (Zyada upar aur width kam ki) ===
         // =====================================================
         let boxX = 68;       
-        let boxY = 828;      // Upar shift kiya (829 se 825)
-        let boxWidth = 289;  
-        let boxHeight = 345; 
+        let boxY = 800;      // Aur upar kar diya (825 se 800)
+        let boxWidth = 279;  // Width aur kam kar di (289 se 279)
+        let boxHeight = 342; 
         // =====================================================
 
         if (croppedImageObj) {  
@@ -333,22 +333,22 @@
         const name = document.getElementById('userName').value;  
         const number = document.getElementById('userNumber').value;  
 
-        // Name: Fixed Position (Upar shift kiya -> 1242)
+        // Name: Fixed Position
         if (name) {  
             ctx.fillStyle = '#000000';  
             ctx.font = 'bold 36px Arial';  
             ctx.textAlign = 'left';  
             ctx.textBaseline = 'middle';  
-            ctx.fillText(name, 166, 1240);  
+            ctx.fillText(name, 166, 1242);  
         }  
 
-        // Mobile Number: Fixed Position (Upar shift kiya -> 1312)
+        // Mobile Number: Fixed Position
         if (number) {  
             ctx.fillStyle = '#000000';  
             ctx.font = 'bold 36px Arial';  
             ctx.textAlign = 'left';  
             ctx.textBaseline = 'middle';  
-            ctx.fillText(number, 166, 1310);  
+            ctx.fillText(number, 166, 1312);  
         }  
     }  
 
@@ -380,7 +380,7 @@
                 }  
                 const image = document.getElementById('imageToCrop');  
                 cropper = new Cropper(image, {  
-                    aspectRatio: 289 / 345,  
+                    aspectRatio: 279 / 342, // Updated aspect ratio for new width  
                     viewMode: 1,  
                     autoCropArea: 1,  
                 });  
@@ -406,8 +406,8 @@
     function cropAndSaveImage() {  
         if (cropper) {  
             const canvasCropped = cropper.getCroppedCanvas({  
-                width: 289,   
-                height: 345   
+                width: 279,   
+                height: 342   
             });  
               
             currentPhotoBase64 = canvasCropped.toDataURL();  
