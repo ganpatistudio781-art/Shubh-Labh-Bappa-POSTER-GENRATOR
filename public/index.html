@@ -318,11 +318,11 @@
         }  
 
         // =====================================================
-        // === PHOTO BOX VALUES (Zyada upar aur width kam ki) ===
+        // === PHOTO BOX VALUES (Right aur Neeche shift kiya) ===
         // =====================================================
-        let boxX = 68;       
-        let boxY = 800;      // Aur upar kar diya (825 se 800)
-        let boxWidth = 279;  // Width aur kam kar di (289 se 279)
+        let boxX = 110;      // Right shift kiya (68 se 110)
+        let boxY = 830;      // Neeche kiya (800 se 830)
+        let boxWidth = 279;  
         let boxHeight = 342; 
         // =====================================================
 
@@ -333,22 +333,22 @@
         const name = document.getElementById('userName').value;  
         const number = document.getElementById('userNumber').value;  
 
-        // Name: Fixed Position
+        // Name: Fixed Position (Right aur Neeche shift kiya)
         if (name) {  
             ctx.fillStyle = '#000000';  
             ctx.font = 'bold 36px Arial';  
             ctx.textAlign = 'left';  
             ctx.textBaseline = 'middle';  
-            ctx.fillText(name, 166, 1242);  
+            ctx.fillText(name, 208, 1272); // X: 166 -> 208, Y: 1242 -> 1272
         }  
 
-        // Mobile Number: Fixed Position
+        // Mobile Number: Fixed Position (Right aur Neeche shift kiya)
         if (number) {  
             ctx.fillStyle = '#000000';  
             ctx.font = 'bold 36px Arial';  
             ctx.textAlign = 'left';  
             ctx.textBaseline = 'middle';  
-            ctx.fillText(number, 166, 1312);  
+            ctx.fillText(number, 208, 1342); // X: 166 -> 208, Y: 1312 -> 1342
         }  
     }  
 
@@ -380,7 +380,7 @@
                 }  
                 const image = document.getElementById('imageToCrop');  
                 cropper = new Cropper(image, {  
-                    aspectRatio: 279 / 342, // Updated aspect ratio for new width  
+                    aspectRatio: 279 / 342,  
                     viewMode: 1,  
                     autoCropArea: 1,  
                 });  
