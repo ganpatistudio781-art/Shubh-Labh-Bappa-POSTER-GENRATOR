@@ -30,6 +30,7 @@
             border-radius: 12px;  
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);  
             text-align: center;  
+            margin-bottom: 20px;  
         }  
         .channel-title {  
             font-size: 26px;  
@@ -118,6 +119,64 @@
         .btn:hover {  
             background-color: #218838;  
         }  
+        .btn-save {  
+            background-color: #007bff;  
+            margin-top: 10px;  
+        }  
+        .btn-save:hover {  
+            background-color: #0056b3;  
+        }  
+
+        /* Saved Entries List Section */  
+        .saved-list-container {  
+            width: 100%;  
+            max-width: 450px;  
+            background: #ffffff;  
+            padding: 20px;  
+            border-radius: 12px;  
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);  
+            text-align: left;  
+        }  
+        .saved-list-container h3 {  
+            margin-bottom: 15px;  
+            color: #333;  
+            font-size: 18px;  
+            text-align: center;  
+        }  
+        .saved-item {  
+            display: flex;  
+            justify-content: space-between;  
+            align-items: center;  
+            background: #f8f9fa;  
+            padding: 10px;  
+            border-radius: 6px;  
+            margin-bottom: 10px;  
+            border: 1px solid #ddd;  
+        }  
+        .saved-info {  
+            font-size: 14px;  
+        }  
+        .saved-info span {  
+            display: block;  
+            font-weight: bold;  
+            color: #444;  
+        }  
+        .saved-actions {  
+            display: flex;  
+            gap: 5px;  
+        }  
+        .action-btn {  
+            padding: 6px 10px;  
+            border: none;  
+            border-radius: 4px;  
+            cursor: pointer;  
+            font-size: 12px;  
+            color: white;  
+        }  
+        .btn-wa-send { background-color: #25d366; }  
+        .btn-wa-send:hover { background-color: #1ebe5d; }  
+        .btn-del { background-color: #dc3545; }  
+        .btn-del:hover { background-color: #c82333; }  
 
         /* Popups Styling */  
         .modal-overlay {  
@@ -221,7 +280,7 @@
 
     <!-- 4. Inputs with Name & Number Placeholders -->  
     <div class="form-group">  
-        <label for="userName">Name:</label>  
+        <label for="userName">Apna Naam:</label>  
         <input type="text" id="userName" class="form-control" placeholder="Name" oninput="updatePoster()">  
     </div>  
 
@@ -237,15 +296,24 @@
         <input type="file" id="galleryInput" accept="image/*" style="display:none;" onchange="handleFileSelect(event)">  
     </div>  
 
-    <button class="btn" onclick="downloadPoster()">Download Poster</button>  
+    <button class="btn" onclick="downloadPoster()">Download Current Poster</button>  
+    <button class="btn btn-save" onclick="saveCurrentEntry()">💾 Save This Entry to List</button>  
+</div>  
+
+<!-- Saved Entries List Box -->  
+<div class="saved-list-container">  
+    <h3>📋 Saved Entries List</h3>  
+    <div id="savedEntriesList">  
+        <p style="text-align: center; color: #777; font-size: 14px;">Abhi koi entry save nahi hai.</p>  
+    </div>  
 </div>  
 
 <!-- Popup 1: Choose Camera or Gallery -->  
 <div id="sourceModal" class="modal-overlay">  
     <div class="modal-box">  
-        <h3> Select photo </h3>  
-        <button class="modal-btn camera" onclick="triggerCamera()">📸 Click from camera </button>  
-        <button class="modal-btn gallery" onclick="triggerGallery()">🖼️ Choose from  Gallery </button>  
+        <h3>Photo Select Karein</h3>  
+        <button class="modal-btn camera" onclick="triggerCamera()">📸 Camera se kheencho</button>  
+        <button class="modal-btn gallery" onclick="triggerGallery()">🖼️ Gallery se chuno</button>  
         <button class="modal-btn cancel" onclick="closeSourceModal()">Cancel</button>  
     </div>  
 </div>  
@@ -277,6 +345,7 @@
     let croppedImageObj = null;  
     let cropper = null;  
     let isTemplateLoaded = false;  
+    let currentPhotoBase64 = "";  
 
     const canvas = document.getElementById('posterCanvas');  
     const ctx = canvas.getContext('2d');  
@@ -291,10 +360,12 @@
             canvas.height = 1350;  
             isTemplateLoaded = true;  
             updatePoster();  
+            renderSavedEntries();  
         };  
         templateImg.onerror = function() {  
             isTemplateLoaded = false;  
             updatePoster();  
+            renderSavedEntries();  
         };  
         templateImg.src = 'poster-template.png';  
     }  
@@ -316,12 +387,12 @@
         }  
 
         // =====================================================
-        // === PHOTO BOX VALUES ===
+        // === PHOTO BOX VALUES (Thoda neeche aur chhota) ===
         // =====================================================
         let boxX = 68;       
-        let boxY = 780;      
-        let boxWidth = 304;  
-        let boxHeight = 360; 
+        let boxY = 782;      // Pehle 775 tha, ab aur neeche kar diya
+        let boxWidth = 290;  // Pehle 308 tha, halka sa chhota kiya
+        let boxHeight = 340; // Pehle 360 tha, halka sa chhota kiya
         // =====================================================
 
         if (croppedImageObj) {  
@@ -331,22 +402,22 @@
         const name = document.getElementById('userName').value;  
         const number = document.getElementById('userNumber').value;  
 
-        // Name: Fixed Position (3px Left Shifted)
+        // Name: Fixed Position (Thoda neeche shift kiya -> 1210)
         if (name) {  
             ctx.fillStyle = '#000000';  
             ctx.font = 'bold 36px Arial';  
             ctx.textAlign = 'left';  
             ctx.textBaseline = 'middle';  
-            ctx.fillText(name, 160, 1210);  
+            ctx.fillText(name, 166, 1210);  
         }  
 
-        // Mobile Number: Fixed Position (3px Left Shifted)
+        // Mobile Number: Fixed Position (Thoda neeche shift kiya -> 1290)
         if (number) {  
             ctx.fillStyle = '#000000';  
             ctx.font = 'bold 36px Arial';  
             ctx.textAlign = 'left';  
             ctx.textBaseline = 'middle';  
-            ctx.fillText(number, 160, 1290);  
+            ctx.fillText(number, 166, 1290);  
         }  
     }  
 
@@ -378,7 +449,7 @@
                 }  
                 const image = document.getElementById('imageToCrop');  
                 cropper = new Cropper(image, {  
-                    aspectRatio: 308 / 360,  
+                    aspectRatio: 290 / 340,  // Updated aspect ratio matching new box size
                     viewMode: 1,  
                     autoCropArea: 1,  
                 });  
@@ -404,17 +475,138 @@
     function cropAndSaveImage() {  
         if (cropper) {  
             const canvasCropped = cropper.getCroppedCanvas({  
-                width: 308,   
-                height: 360   
+                width: 290,   
+                height: 340   
             });  
               
+            currentPhotoBase64 = canvasCropped.toDataURL();  
+
             croppedImageObj = new Image();  
-            croppedImageObj.src = canvasCropped.toDataURL();  
+            croppedImageObj.src = currentPhotoBase64;  
             croppedImageObj.onload = function() {  
                 updatePoster();  
                 closeCropModal();  
             }  
         }  
+    }  
+
+    // Save current form entry into localStorage list
+    function saveCurrentEntry() {  
+        const name = document.getElementById('userName').value.trim();  
+        const number = document.getElementById('userNumber').value.trim();  
+
+        if (!name && !number) {  
+            alert("Kam se kam Naam ya Number toh bhariye!");  
+            return;  
+        }  
+
+        let entries = JSON.parse(localStorage.getItem('bappa_entries') || '[]');  
+        
+        entries.push({  
+            id: Date.now(),  
+            name: name || 'N/A',  
+            number: number || 'N/A',  
+            photo: currentPhotoBase64  
+        });  
+
+        localStorage.setItem('bappa_entries', JSON.stringify(entries));  
+        renderSavedEntries();  
+        alert("Entry successfully save ho gayi hai list mein!");  
+    }  
+
+    // Render saved list in HTML
+    function renderSavedEntries() {  
+        const listContainer = document.getElementById('savedEntriesList');  
+        let entries = JSON.parse(localStorage.getItem('bappa_entries') || '[]');  
+
+        if (entries.length === 0) {  
+            listContainer.innerHTML = `<p style="text-align: center; color: #777; font-size: 14px;">Abhi koi entry save nahi hai.</p>`;  
+            return;  
+        }  
+
+        let html = '';  
+        entries.forEach((item, index) => {  
+            html += `  
+                <div class="saved-item">  
+                    <div class="saved-info">  
+                        <span>${index + 1}. ${item.name}</span>  
+                        <small>📞 ${item.number}</small>  
+                    </div>  
+                    <div class="saved-actions">  
+                        <button class="action-btn btn-wa-send" onclick="sendSavedToWhatsApp(${item.id})">💬 WhatsApp</button>  
+                        <button class="action-btn btn-del" onclick="deleteEntry(${item.id})">🗑️</button>  
+                    </div>  
+                </div>  
+            `;  
+        });  
+        listContainer.innerHTML = html;  
+    }  
+
+    // Delete a specific entry from saved list
+    function deleteEntry(id) {  
+        let entries = JSON.parse(localStorage.getItem('bappa_entries') || '[]');  
+        entries = entries.filter(item => item.id !== id);  
+        localStorage.setItem('bappa_entries', JSON.stringify(entries));  
+        renderSavedEntries();  
+    }  
+
+    // Generate specific poster for saved entry and send via WhatsApp
+    function sendSavedToWhatsApp(id) {  
+        let entries = JSON.parse(localStorage.getItem('bappa_entries') || '[]');  
+        let item = entries.find(e => e.id === id);  
+        if (!item) return;  
+
+        // Temporarily load this item's data onto the canvas using current template
+        ctx.clearRect(0, 0, canvas.width, canvas.height);  
+        if (isTemplateLoaded) {  
+            ctx.drawImage(templateImg, 0, 0, 1080, 1350);  
+        }  
+
+        let boxX = 68, boxY = 782, boxWidth = 290, boxHeight = 340;  
+
+        if (item.photo) {  
+            let tempImg = new Image();  
+            tempImg.src = item.photo;  
+            tempImg.onload = function() {  
+                ctx.drawImage(tempImg, boxX, boxY, boxWidth, boxHeight);  
+                drawTextAndShare(item);  
+            };  
+        } else {  
+            drawTextAndShare(item);  
+        }  
+    }  
+
+    function drawTextAndShare(item) {  
+        if (item.name && item.name !== 'N/A') {  
+            ctx.fillStyle = '#000000';  
+            ctx.font = 'bold 36px Arial';  
+            ctx.textAlign = 'left';  
+            ctx.textBaseline = 'middle';  
+            ctx.fillText(item.name, 166, 1210);  
+        }  
+        if (item.number && item.number !== 'N/A') {  
+            ctx.fillStyle = '#000000';  
+            ctx.font = 'bold 36px Arial';  
+            ctx.textAlign = 'left';  
+            ctx.textBaseline = 'middle';  
+            ctx.fillText(item.number, 166, 1290);  
+        }  
+
+        setTimeout(() => {  
+            const dataUrl = canvas.toDataURL('image/png');  
+            const link = document.createElement('a');  
+            link.download = `${item.name.replace(/\s+/g, '_')}-poster.png`;  
+            link.href = dataUrl;  
+            document.body.appendChild(link);  
+            link.click();  
+            document.body.removeChild(link);  
+
+            // Restore current view back to form inputs  
+            updatePoster();  
+
+            const text = encodeURIComponent(`🙏 Shubh Labh Bappa Poster\nNaam: ${item.name}\nNumber: ${item.number}\n(Poster download ho gaya hai, ab aap ise WhatsApp par gallery se select karke bhej sakte hain!)`);  
+            window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');  
+        }, 200);  
     }  
 
     function downloadPoster() {  
