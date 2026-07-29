@@ -318,12 +318,12 @@
         }  
 
         // =====================================================
-        // === PHOTO BOX VALUES (Screenshot ke hisaab se adjust kiya) ===
+        // === PHOTO BOX VALUES (Updated as requested) ===
         // =====================================================
         let boxX = 68;       
-        let boxY = 830;      // Thoda aur neeche kar diya (800 se 830)
-        let boxWidth = 290;  
-        let boxHeight = 340; 
+        let boxY = 829;      // 1 pixel upar kiya (830 se 829)
+        let boxWidth = 289;  // Width 1 pixel kam ki (290 se 289)
+        let boxHeight = 342; // Height 2 pixel badhayi (340 se 342)
         // =====================================================
 
         if (croppedImageObj) {  
@@ -333,22 +333,22 @@
         const name = document.getElementById('userName').value;  
         const number = document.getElementById('userNumber').value;  
 
-        // Name: Fixed Position (Neeche shift kiya -> 1250)
+        // Name: Fixed Position (4 pixel upar kiya -> 1246)
         if (name) {  
             ctx.fillStyle = '#000000';  
             ctx.font = 'bold 36px Arial';  
             ctx.textAlign = 'left';  
             ctx.textBaseline = 'middle';  
-            ctx.fillText(name, 166, 1250);  
+            ctx.fillText(name, 166, 1246);  
         }  
 
-        // Mobile Number: Fixed Position (Neeche shift kiya -> 1320)
+        // Mobile Number: Fixed Position (4 pixel upar kiya -> 1316)
         if (number) {  
             ctx.fillStyle = '#000000';  
             ctx.font = 'bold 36px Arial';  
             ctx.textAlign = 'left';  
             ctx.textBaseline = 'middle';  
-            ctx.fillText(number, 166, 1320);  
+            ctx.fillText(number, 166, 1316);  
         }  
     }  
 
@@ -380,7 +380,7 @@
                 }  
                 const image = document.getElementById('imageToCrop');  
                 cropper = new Cropper(image, {  
-                    aspectRatio: 290 / 340,  
+                    aspectRatio: 289 / 342, // Updated aspect ratio for new dimensions  
                     viewMode: 1,  
                     autoCropArea: 1,  
                 });  
@@ -406,8 +406,8 @@
     function cropAndSaveImage() {  
         if (cropper) {  
             const canvasCropped = cropper.getCroppedCanvas({  
-                width: 290,   
-                height: 340   
+                width: 289,   
+                height: 342   
             });  
               
             currentPhotoBase64 = canvasCropped.toDataURL();  
