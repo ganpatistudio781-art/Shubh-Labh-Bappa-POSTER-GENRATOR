@@ -318,10 +318,10 @@
         }  
 
         // =====================================================
-        // === PHOTO BOX VALUES (Thoda upar shift kiya) ===
+        // === PHOTO BOX VALUES (Screenshot ke hisaab se adjust kiya) ===
         // =====================================================
         let boxX = 68;       
-        let boxY = 800;      // Thoda upar kar diya (860 se 800)
+        let boxY = 830;      // Thoda aur neeche kar diya (800 se 830)
         let boxWidth = 290;  
         let boxHeight = 340; 
         // =====================================================
@@ -333,22 +333,22 @@
         const name = document.getElementById('userName').value;  
         const number = document.getElementById('userNumber').value;  
 
-        // Name: Fixed Position (Thoda upar shift kiya -> 1220)
+        // Name: Fixed Position (Neeche shift kiya -> 1250)
         if (name) {  
             ctx.fillStyle = '#000000';  
             ctx.font = 'bold 36px Arial';  
             ctx.textAlign = 'left';  
             ctx.textBaseline = 'middle';  
-            ctx.fillText(name, 166, 1220);  
+            ctx.fillText(name, 166, 1250);  
         }  
 
-        // Mobile Number: Fixed Position (Thoda upar shift kiya -> 1290)
+        // Mobile Number: Fixed Position (Neeche shift kiya -> 1320)
         if (number) {  
             ctx.fillStyle = '#000000';  
             ctx.font = 'bold 36px Arial';  
             ctx.textAlign = 'left';  
             ctx.textBaseline = 'middle';  
-            ctx.fillText(number, 166, 1290);  
+            ctx.fillText(number, 166, 1320);  
         }  
     }  
 
