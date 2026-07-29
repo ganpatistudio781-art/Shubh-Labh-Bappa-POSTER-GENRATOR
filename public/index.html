@@ -219,15 +219,15 @@
         </div>  
     </div>  
 
-    <!-- 4. Inputs: Name, Number, Photo Upload & Generate Button -->  
+    <!-- 4. Inputs with Name & Number Placeholders -->  
     <div class="form-group">  
-        <label for="userName">Apna Naam:</label>  
-        <input type="text" id="userName" class="form-control" placeholder="Apna naam yahan likhein" oninput="updatePoster()">  
+        <label for="userName">Name:</label>  
+        <input type="text" id="userName" class="form-control" placeholder="Name" oninput="updatePoster()">  
     </div>  
 
     <div class="form-group">  
         <label for="userNumber">Mobile Number:</label>  
-        <input type="tel" id="userNumber" class="form-control" placeholder="Apna mobile number likhein" oninput="updatePoster()">  
+        <input type="tel" id="userNumber" class="form-control" placeholder="Number" oninput="updatePoster()">  
     </div>  
 
     <div class="form-group">  
@@ -243,9 +243,9 @@
 <!-- Popup 1: Choose Camera or Gallery -->  
 <div id="sourceModal" class="modal-overlay">  
     <div class="modal-box">  
-        <h3>Photo Select Karein</h3>  
-        <button class="modal-btn camera" onclick="triggerCamera()">📸 Camera se kheencho</button>  
-        <button class="modal-btn gallery" onclick="triggerGallery()">🖼️ Gallery se chuno</button>  
+        <h3> Select photo </h3>  
+        <button class="modal-btn camera" onclick="triggerCamera()">📸 Click from camera </button>  
+        <button class="modal-btn gallery" onclick="triggerGallery()">🖼️ Choose from  Gallery </button>  
         <button class="modal-btn cancel" onclick="closeSourceModal()">Cancel</button>  
     </div>  
 </div>  
@@ -316,7 +316,7 @@
         }  
 
         // =====================================================
-        // === PHOTO BOX VALUES (1px Left Shifted -> 69 se 68) ===
+        // === PHOTO BOX VALUES ===
         // =====================================================
         let boxX = 68;       
         let boxY = 775;      
@@ -331,7 +331,7 @@
         const name = document.getElementById('userName').value;  
         const number = document.getElementById('userNumber').value;  
 
-        // Name: Fixed Position (3px Left Shifted -> 169 se 166)
+        // Name: Fixed Position (3px Left Shifted)
         if (name) {  
             ctx.fillStyle = '#000000';  
             ctx.font = 'bold 36px Arial';  
@@ -340,7 +340,7 @@
             ctx.fillText(name, 166, 1206);  
         }  
 
-        // Mobile Number: Fixed Position (3px Left Shifted -> 169 se 166)
+        // Mobile Number: Fixed Position (3px Left Shifted)
         if (number) {  
             ctx.fillStyle = '#000000';  
             ctx.font = 'bold 36px Arial';  
