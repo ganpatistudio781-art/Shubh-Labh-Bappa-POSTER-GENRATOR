@@ -318,10 +318,10 @@
         }  
 
         // =====================================================
-        // === PHOTO BOX VALUES (Halka sa aur upar kiya) ===
+        // === PHOTO BOX VALUES ===
         // =====================================================
         let boxX = 70;       
-        let boxY = 822;      // Upar shift kiya (829 se 825)
+        let boxY = 822;      
         let boxWidth = 288;  
         let boxHeight = 344; 
         // =====================================================
@@ -333,22 +333,22 @@
         const name = document.getElementById('userName').value;  
         const number = document.getElementById('userNumber').value;  
 
-        // Name: Fixed Position (Upar shift kiya -> 1242)
+        // Name: Left shift kiya (155 se hata kar 130 kar diya hai)
         if (name) {  
             ctx.fillStyle = '#000000';  
             ctx.font = 'bold 36px Arial';  
             ctx.textAlign = 'left';  
             ctx.textBaseline = 'middle';  
-            ctx.fillText(name, 155, 1238);  
+            ctx.fillText(name, 130, 1238);  
         }  
 
-        // Mobile Number: Fixed Position (Upar shift kiya -> 1312)
+        // Mobile Number: Left shift kiya (155 se hata kar 130 kar diya hai)
         if (number) {  
             ctx.fillStyle = '#000000';  
             ctx.font = 'bold 36px Arial';  
             ctx.textAlign = 'left';  
             ctx.textBaseline = 'middle';  
-            ctx.fillText(number, 155, 1308);  
+            ctx.fillText(number, 130, 1308);  
         }  
     }  
 
