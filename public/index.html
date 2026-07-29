@@ -222,7 +222,7 @@
 
     <!-- 4. Inputs with Name & Number Placeholders -->  
     <div class="form-group">  
-        <label for="userName">Apna Naam:</label>  
+        <label for="userName"> Your Naam:</label>  
         <input type="text" id="userName" class="form-control" placeholder="Name" oninput="updatePoster()">  
     </div>  
 
@@ -245,8 +245,8 @@
 <div id="sourceModal" class="modal-overlay">  
     <div class="modal-box">  
         <h3>Photo Select Karein</h3>  
-        <button class="modal-btn camera" onclick="triggerCamera()">📸 Camera se kheencho</button>  
-        <button class="modal-btn gallery" onclick="triggerGallery()">🖼️ Gallery se chuno</button>  
+        <button class="modal-btn camera" onclick="triggerCamera()">📸 Click from Camera </button>  
+        <button class="modal-btn gallery" onclick="triggerGallery()">🖼️ Choose from Gallery </button>  
         <button class="modal-btn cancel" onclick="closeSourceModal()">Cancel</button>  
     </div>  
 </div>  
@@ -321,9 +321,9 @@
         // === PHOTO BOX VALUES (Halka sa aur upar kiya) ===
         // =====================================================
         let boxX = 70;       
-        let boxY = 825;      // Upar shift kiya (829 se 825)
+        let boxY = 822;      // Upar shift kiya (829 se 825)
         let boxWidth = 288;  
-        let boxHeight = 340; 
+        let boxHeight = 344; 
         // =====================================================
 
         if (croppedImageObj) {  
@@ -339,7 +339,7 @@
             ctx.font = 'bold 36px Arial';  
             ctx.textAlign = 'left';  
             ctx.textBaseline = 'middle';  
-            ctx.fillText(name, 166, 1238);  
+            ctx.fillText(name, 162, 1238);  
         }  
 
         // Mobile Number: Fixed Position (Upar shift kiya -> 1312)
@@ -348,7 +348,7 @@
             ctx.font = 'bold 36px Arial';  
             ctx.textAlign = 'left';  
             ctx.textBaseline = 'middle';  
-            ctx.fillText(number, 166, 1308);  
+            ctx.fillText(number, 162, 1308);  
         }  
     }  
 
@@ -380,7 +380,7 @@
                 }  
                 const image = document.getElementById('imageToCrop');  
                 cropper = new Cropper(image, {  
-                    aspectRatio: 288 / 340,  
+                    aspectRatio: 288 / 344,  
                     viewMode: 1,  
                     autoCropArea: 1,  
                 });  
