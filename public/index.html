@@ -318,12 +318,12 @@
         }  
 
         // =====================================================
-        // === PHOTO BOX VALUES (Updated as requested) ===
+        // === PHOTO BOX VALUES (Halka sa aur upar kiya) ===
         // =====================================================
-        let boxX = 68;       
-        let boxY = 829;      // 1 pixel upar kiya (830 se 829)
-        let boxWidth = 289;  // Width 1 pixel kam ki (290 se 289)
-        let boxHeight = 342; // Height 2 pixel badhayi (340 se 342)
+        let boxX = 69;       
+        let boxY = 825;      // Upar shift kiya (829 se 825)
+        let boxWidth = 289;  
+        let boxHeight = 342; 
         // =====================================================
 
         if (croppedImageObj) {  
@@ -333,22 +333,22 @@
         const name = document.getElementById('userName').value;  
         const number = document.getElementById('userNumber').value;  
 
-        // Name: Fixed Position (4 pixel upar kiya -> 1246)
+        // Name: Fixed Position (Upar shift kiya -> 1242)
         if (name) {  
             ctx.fillStyle = '#000000';  
             ctx.font = 'bold 36px Arial';  
             ctx.textAlign = 'left';  
             ctx.textBaseline = 'middle';  
-            ctx.fillText(name, 166, 1246);  
+            ctx.fillText(name, 166, 1242);  
         }  
 
-        // Mobile Number: Fixed Position (4 pixel upar kiya -> 1316)
+        // Mobile Number: Fixed Position (Upar shift kiya -> 1312)
         if (number) {  
             ctx.fillStyle = '#000000';  
             ctx.font = 'bold 36px Arial';  
             ctx.textAlign = 'left';  
             ctx.textBaseline = 'middle';  
-            ctx.fillText(number, 166, 1316);  
+            ctx.fillText(number, 166, 1312);  
         }  
     }  
 
@@ -380,7 +380,7 @@
                 }  
                 const image = document.getElementById('imageToCrop');  
                 cropper = new Cropper(image, {  
-                    aspectRatio: 289 / 342, // Updated aspect ratio for new dimensions  
+                    aspectRatio: 289 / 342,  
                     viewMode: 1,  
                     autoCropArea: 1,  
                 });  
