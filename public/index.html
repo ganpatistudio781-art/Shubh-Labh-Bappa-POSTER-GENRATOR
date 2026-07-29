@@ -318,12 +318,12 @@
         }  
 
         // =====================================================
-        // === PHOTO BOX VALUES (Right aur Neeche shift kiya) ===
+        // === PHOTO BOX VALUES (Halka sa aur upar kiya) ===
         // =====================================================
-        let boxX = 110;      // Right shift kiya (68 se 110)
-        let boxY = 830;      // Neeche kiya (800 se 830)
-        let boxWidth = 279;  
-        let boxHeight = 342; 
+        let boxX = 70;       
+        let boxY = 825;      // Upar shift kiya (829 se 825)
+        let boxWidth = 288;  
+        let boxHeight = 340; 
         // =====================================================
 
         if (croppedImageObj) {  
@@ -333,22 +333,22 @@
         const name = document.getElementById('userName').value;  
         const number = document.getElementById('userNumber').value;  
 
-        // Name: Fixed Position (Right aur Neeche shift kiya)
+        // Name: Fixed Position (Upar shift kiya -> 1242)
         if (name) {  
             ctx.fillStyle = '#000000';  
             ctx.font = 'bold 36px Arial';  
             ctx.textAlign = 'left';  
             ctx.textBaseline = 'middle';  
-            ctx.fillText(name, 208, 1272); // X: 166 -> 208, Y: 1242 -> 1272
+            ctx.fillText(name, 166, 1238);  
         }  
 
-        // Mobile Number: Fixed Position (Right aur Neeche shift kiya)
+        // Mobile Number: Fixed Position (Upar shift kiya -> 1312)
         if (number) {  
             ctx.fillStyle = '#000000';  
             ctx.font = 'bold 36px Arial';  
             ctx.textAlign = 'left';  
             ctx.textBaseline = 'middle';  
-            ctx.fillText(number, 208, 1342); // X: 166 -> 208, Y: 1312 -> 1342
+            ctx.fillText(number, 166, 1308);  
         }  
     }  
 
@@ -380,7 +380,7 @@
                 }  
                 const image = document.getElementById('imageToCrop');  
                 cropper = new Cropper(image, {  
-                    aspectRatio: 279 / 342,  
+                    aspectRatio: 288 / 340,  
                     viewMode: 1,  
                     autoCropArea: 1,  
                 });  
@@ -406,7 +406,7 @@
     function cropAndSaveImage() {  
         if (cropper) {  
             const canvasCropped = cropper.getCroppedCanvas({  
-                width: 279,   
+                width: 289,   
                 height: 342   
             });  
               
