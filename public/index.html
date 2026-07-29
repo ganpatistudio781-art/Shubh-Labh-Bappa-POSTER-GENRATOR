@@ -318,12 +318,12 @@
         }  
 
         // =====================================================
-        // === PHOTO BOX VALUES (Aur zyada neeche aur chhota) ===
+        // === PHOTO BOX VALUES (Thoda upar shift kiya) ===
         // =====================================================
         let boxX = 68;       
-        let boxY = 860;      // Photo ko aur neeche shift kar diya
-        let boxWidth = 290;  // Chhota size width
-        let boxHeight = 340; // Chhota size height
+        let boxY = 800;      // Thoda upar kar diya (860 se 800)
+        let boxWidth = 290;  
+        let boxHeight = 340; 
         // =====================================================
 
         if (croppedImageObj) {  
@@ -333,22 +333,22 @@
         const name = document.getElementById('userName').value;  
         const number = document.getElementById('userNumber').value;  
 
-        // Name: Fixed Position (Aur neeche shift kiya -> 1280)
+        // Name: Fixed Position (Thoda upar shift kiya -> 1220)
         if (name) {  
             ctx.fillStyle = '#000000';  
             ctx.font = 'bold 36px Arial';  
             ctx.textAlign = 'left';  
             ctx.textBaseline = 'middle';  
-            ctx.fillText(name, 166, 1280);  
+            ctx.fillText(name, 166, 1220);  
         }  
 
-        // Mobile Number: Fixed Position (Aur neeche shift kiya -> 1350)
+        // Mobile Number: Fixed Position (Thoda upar shift kiya -> 1290)
         if (number) {  
             ctx.fillStyle = '#000000';  
             ctx.font = 'bold 36px Arial';  
             ctx.textAlign = 'left';  
             ctx.textBaseline = 'middle';  
-            ctx.fillText(number, 166, 1350);  
+            ctx.fillText(number, 166, 1290);  
         }  
     }  
 
