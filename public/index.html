@@ -320,10 +320,10 @@
         // =====================================================
         // === PHOTO BOX VALUES ===
         // =====================================================
-        let boxX = 70;       
-        let boxY = 822;      
-        let boxWidth = 288;  
-        let boxHeight = 344; 
+       let boxX = 65;        // 70 se sirf 5 px kam (Halka sa Left)
+       let boxY = 815;       // 822 se sirf 7 px kam (Halka sa Upar)
+       let boxWidth = 288;   // Same
+       let boxHeight = 344;  // Same
         // =====================================================
 
         if (croppedImageObj) {  
@@ -406,8 +406,8 @@
     function cropAndSaveImage() {  
         if (cropper) {  
             const canvasCropped = cropper.getCroppedCanvas({  
-                width: 289,   
-                height: 342   
+                width: 288,   
+                height: 344   
             });  
               
             currentPhotoBase64 = canvasCropped.toDataURL();  
