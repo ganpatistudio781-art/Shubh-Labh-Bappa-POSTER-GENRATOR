@@ -303,6 +303,23 @@
 
     initTemplate();  
 
+    // Helper function to render auto-fitting text inside a specified box width
+    function drawFittedText(text, x, y, maxWidth, initialFontSize = 34) {
+        let fontSize = initialFontSize;
+        ctx.font = `bold ${fontSize}px Arial`;
+        
+        // Font size tab tak kam hoga jab tak text size 310px box ke andar fit na ho jaye
+        while (ctx.measureText(text).width > maxWidth && fontSize > 10) {
+            fontSize--;
+            ctx.font = `bold ${fontSize}px Arial`;
+        }
+        
+        ctx.fillStyle = '#000000';  
+        ctx.textAlign = 'left';  
+        ctx.textBaseline = 'middle';  
+        ctx.fillText(text, x, y);
+    }
+
     function updatePoster() {  
         ctx.clearRect(0, 0, canvas.width, canvas.height);  
           
@@ -320,10 +337,10 @@
         // =====================================================
         // === PHOTO BOX VALUES ===
         // =====================================================
-       let boxX = 65;        // 70 se sirf 5 px kam (Halka sa Left)
-       let boxY = 814;       // 822 se sirf 7 px kam (Halka sa Upar)
-       let boxWidth = 288;   // Same
-       let boxHeight = 344;  // Same
+       let boxX = 65;        
+       let boxY = 814;       
+       let boxWidth = 288;   
+       let boxHeight = 344;  
         // =====================================================
 
         if (croppedImageObj) {  
@@ -333,22 +350,19 @@
         const name = document.getElementById('userName').value;  
         const number = document.getElementById('userNumber').value;  
 
-        // Name: 125 kar diya hai
+        // Fixed Text Box Specs:
+        // X = 116px, Width = 310px (Right boundary X = 426px)
+        const textStartX = 116;
+        const maxBoxWidth = 310;
+
+        // NAME Position: Y = 1257px
         if (name) {  
-            ctx.fillStyle = '#000000';  
-            ctx.font = 'bold 34px Arial';  
-            ctx.textAlign = 'left';  
-            ctx.textBaseline = 'middle';  
-            ctx.fillText(name, 105, 1238);  
+            drawFittedText(name, textStartX, 1257, maxBoxWidth, 34);
         }  
 
-        // Mobile Number: 125 kar diya hai
+        // MOBILE NUMBER Position: Y = 1321px
         if (number) {  
-            ctx.fillStyle = '#000000';  
-            ctx.font = 'bold 34px Arial';  
-            ctx.textAlign = 'left';  
-            ctx.textBaseline = 'middle';  
-            ctx.fillText(number, 105, 1308);  
+            drawFittedText(number, textStartX, 1321, maxBoxWidth, 34);
         }  
     }  
 
@@ -436,4 +450,4 @@
 </script>  
 
 </body>  
-</html>  
+</html>
