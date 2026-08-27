@@ -308,6 +308,7 @@
         let fontSize = initialFontSize;
         ctx.font = `bold ${fontSize}px Arial`;
         
+        // Font size tab tak kam hoga jab tak text size 310px box ke andar fit na ho jaye
         while (ctx.measureText(text).width > maxWidth && fontSize > 10) {
             fontSize--;
             ctx.font = `bold ${fontSize}px Arial`;
@@ -334,7 +335,7 @@
         }  
 
         // =====================================================
-        // === PHOTO BOX VALUES (Further Shifted Left & Up) ===
+        // === PHOTO BOX VALUES ===
         // =====================================================
        let boxX = 65;        
        let boxY = 814;       
@@ -349,18 +350,19 @@
         const name = document.getElementById('userName').value;  
         const number = document.getElementById('userNumber').value;  
 
-        // Fixed Text Box Specs (Shifted Left):
-        const textStartX = 100;
+        // Fixed Text Box Specs:
+        // X = 116px, Width = 310px (Right boundary X = 426px)
+        const textStartX = 116;
         const maxBoxWidth = 310;
 
-        // NAME Position (Shifted Up): Y = 1242px
+        // NAME Position: Y = 1257px
         if (name) {  
-            drawFittedText(name, textStartX, 1242, maxBoxWidth, 34);
+            drawFittedText(name, textStartX, 1257, maxBoxWidth, 34);
         }  
 
-        // MOBILE NUMBER Position (Shifted Up): Y = 1306px
+        // MOBILE NUMBER Position: Y = 1321px
         if (number) {  
-            drawFittedText(number, textStartX, 1306, maxBoxWidth, 34);
+            drawFittedText(number, textStartX, 1321, maxBoxWidth, 34);
         }  
     }  
 
