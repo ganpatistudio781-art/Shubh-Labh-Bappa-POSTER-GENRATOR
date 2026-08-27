@@ -334,10 +334,10 @@
         }  
 
         // =====================================================
-        // === PHOTO BOX VALUES (Left: -5px, Up: -5px) ===
+        // === PHOTO BOX VALUES (Further Shifted Left & Up) ===
         // =====================================================
-       let boxX = 60;        
-       let boxY = 809;       
+       let boxX = 52;        
+       let boxY = 798;       
        let boxWidth = 288;   
        let boxHeight = 344;  
         // =====================================================
@@ -349,18 +349,18 @@
         const name = document.getElementById('userName').value;  
         const number = document.getElementById('userNumber').value;  
 
-        // Fixed Text Box Specs (Left: -6px):
-        const textStartX = 110;
+        // Fixed Text Box Specs (Shifted Left):
+        const textStartX = 100;
         const maxBoxWidth = 310;
 
-        // NAME Position (Up: -5px): Y = 1252px
+        // NAME Position (Shifted Up): Y = 1242px
         if (name) {  
-            drawFittedText(name, textStartX, 1252, maxBoxWidth, 34);
+            drawFittedText(name, textStartX, 1242, maxBoxWidth, 34);
         }  
 
-        // MOBILE NUMBER Position (Up: -5px): Y = 1316px
+        // MOBILE NUMBER Position (Shifted Up): Y = 1306px
         if (number) {  
-            drawFittedText(number, textStartX, 1316, maxBoxWidth, 34);
+            drawFittedText(number, textStartX, 1306, maxBoxWidth, 34);
         }  
     }  
 
