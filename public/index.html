@@ -351,18 +351,18 @@
         const number = document.getElementById('userNumber').value;  
 
         // Fixed Text Box Specs:
-        // X = 116px, Width = 310px (Right boundary X = 426px)
-        const textStartX = 116;
+        // START X shifted left to 105px, Width = 310px
+        const textStartX = 105;
         const maxBoxWidth = 310;
 
-        // NAME Position: Y = 1257px
+        // NAME Position: Y shifted up to 1230px
         if (name) {  
-            drawFittedText(name, textStartX, 1257, maxBoxWidth, 34);
+            drawFittedText(name, textStartX, 1230, maxBoxWidth, 34);
         }  
 
-        // MOBILE NUMBER Position: Y = 1321px
+        // MOBILE NUMBER Position: Y shifted up to 1295px
         if (number) {  
-            drawFittedText(number, textStartX, 1321, maxBoxWidth, 34);
+            drawFittedText(number, textStartX, 1295, maxBoxWidth, 34);
         }  
     }  
 
